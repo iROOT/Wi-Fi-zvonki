@@ -1,1090 +1,1473 @@
+/*
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.incallui.widget.multiwaveview;
 
-import android.annotation.TargetApi;
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.ad;
-import android.support.v4.view.e;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.accessibility.AccessibilityEventCompat;
+import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.support.v4.widget.ExploreByTouchHelper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import android.view.animation.Interpolator;
-import com.a.a.a.a;
-import com.a.a.m;
-import com.a.a.m.b;
-import com.android.incallui.a.c;
-import com.mavenir.android.vtow.activation.ActivationAdapter;
-import java.util.ArrayList;
+import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction;
+import android.view.accessibility.AccessibilityNodeProvider;
 
+import com.android.incallui.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * This is a copy of com.android.internal.widget.multiwaveview.GlowPadView with minor changes
+ * to remove dependencies on private api's.
+ *
+ * Incoporated the scaling functionality.
+ *
+ * A re-usable widget containing a center, outer ring and wave animation.
+ */
 public class GlowPadView extends View {
-    private static final boolean DEBUG = false;
-    private static final int HIDE_ANIMATION_DELAY = 200;
-    private static final int HIDE_ANIMATION_DURATION = 200;
-    private static final int INITIAL_SHOW_HANDLE_DURATION = 200;
-    private static final int RETURN_TO_HOME_DELAY = 1200;
-    private static final int RETURN_TO_HOME_DURATION = 200;
-    private static final int REVEAL_GLOW_DELAY = 0;
-    private static final int REVEAL_GLOW_DURATION = 0;
-    private static final float RING_SCALE_COLLAPSED = 0.5f;
-    private static final float RING_SCALE_EXPANDED = 1.0f;
-    private static final int SHOW_ANIMATION_DELAY = 50;
-    private static final int SHOW_ANIMATION_DURATION = 200;
-    private static final float SNAP_MARGIN_DEFAULT = 20.0f;
-    private static final int STATE_FINISH = 5;
-    private static final int STATE_FIRST_TOUCH = 2;
-    private static final int STATE_IDLE = 0;
-    private static final int STATE_SNAP = 4;
-    private static final int STATE_START = 1;
-    private static final int STATE_TRACKING = 3;
     private static final String TAG = "GlowPadView";
-    private static final float TAP_RADIUS_SCALE_ACCESSIBILITY_ENABLED = 1.3f;
-    private static final float TARGET_SCALE_COLLAPSED = 0.8f;
-    private static final float TARGET_SCALE_EXPANDED = 1.0f;
-    private static final int WAVE_ANIMATION_DURATION = 1350;
-    private int mActiveTarget;
-    private boolean mAllowScaling;
-    private boolean mAlwaysTrackFinger;
-    private boolean mAnimatingTargets;
-    private Tweener mBackgroundAnimator;
-    private ArrayList<String> mDirectionDescriptions;
-    private int mDirectionDescriptionsResourceId;
-    private boolean mDragging;
-    private int mFeedbackCount;
-    private AnimationBundle mGlowAnimations;
-    private float mGlowRadius;
-    private int mGrabbedState;
-    private int mGravity;
-    private TargetDrawable mHandleDrawable;
-    private int mHorizontalInset;
-    private boolean mInitialLayout;
-    private float mInnerRadius;
-    private int mMaxTargetHeight;
-    private int mMaxTargetWidth;
-    private int mNewTargetResources;
-    private OnTriggerListener mOnTriggerListener;
-    private float mOuterRadius;
-    private TargetDrawable mOuterRing;
-    private PointCloud mPointCloud;
-    private int mPointerId;
-    private a mResetListener;
-    private a mResetListenerWithPing;
-    private float mRingScaleFactor;
-    private float mSnapMargin;
-    private AnimationBundle mTargetAnimations;
-    private ArrayList<String> mTargetDescriptions;
-    private int mTargetDescriptionsResourceId;
-    private ArrayList<TargetDrawable> mTargetDrawables;
-    private int mTargetResourceId;
-    private a mTargetUpdateListener;
-    private b mUpdateListener;
-    private int mVerticalInset;
-    private int mVibrationDuration;
-    private Vibrator mVibrator;
-    private AnimationBundle mWaveAnimations;
-    private float mWaveCenterX;
-    private float mWaveCenterY;
+    private static final boolean DEBUG = false;
+
+    // Wave state machine
+    private static final int STATE_IDLE = 0;
+    private static final int STATE_START = 1;
+    private static final int STATE_FIRST_TOUCH = 2;
+    private static final int STATE_TRACKING = 3;
+    private static final int STATE_SNAP = 4;
+    private static final int STATE_FINISH = 5;
+
+    // Animation properties.
+    private static final float SNAP_MARGIN_DEFAULT = 20.0f; // distance to ring before we snap to it
 
     public interface OnTriggerListener {
-        public static final int CENTER_HANDLE = 1;
-        public static final int NO_HANDLE = 0;
-
-        void onFinishFinalAnimation();
-
-        void onGrabbed(View view, int i);
-
-        void onGrabbedStateChange(View view, int i);
-
-        void onReleased(View view, int i);
-
-        void onTrigger(View view, int i);
+        int NO_HANDLE = 0;
+        int CENTER_HANDLE = 1;
+        public void onGrabbed(View v, int handle);
+        public void onReleased(View v, int handle);
+        public void onTrigger(View v, int target);
+        public void onGrabbedStateChange(View v, int handle);
+        public void onFinishFinalAnimation();
     }
 
+    // Tuneable parameters for animation
+    private static final int WAVE_ANIMATION_DURATION = 1350;
+    private static final int RETURN_TO_HOME_DELAY = 1200;
+    private static final int RETURN_TO_HOME_DURATION = 200;
+    private static final int HIDE_ANIMATION_DELAY = 200;
+    private static final int HIDE_ANIMATION_DURATION = 200;
+    private static final int SHOW_ANIMATION_DURATION = 200;
+    private static final int SHOW_ANIMATION_DELAY = 50;
+    private static final int INITIAL_SHOW_HANDLE_DURATION = 200;
+    private static final int REVEAL_GLOW_DELAY = 0;
+    private static final int REVEAL_GLOW_DURATION = 0;
+
+    private static final float TAP_RADIUS_SCALE_ACCESSIBILITY_ENABLED = 1.3f;
+    private static final float TARGET_SCALE_EXPANDED = 1.0f;
+    private static final float TARGET_SCALE_COLLAPSED = 0.8f;
+    private static final float RING_SCALE_EXPANDED = 1.0f;
+    private static final float RING_SCALE_COLLAPSED = 0.5f;
+
+    private ArrayList<TargetDrawable> mTargetDrawables = new ArrayList<TargetDrawable>();
+    private AnimationBundle mWaveAnimations = new AnimationBundle();
+    private AnimationBundle mTargetAnimations = new AnimationBundle();
+    private AnimationBundle mGlowAnimations = new AnimationBundle();
+    private ArrayList<String> mTargetDescriptions;
+    private ArrayList<String> mDirectionDescriptions;
+    private OnTriggerListener mOnTriggerListener;
+    private TargetDrawable mHandleDrawable;
+    private TargetDrawable mOuterRing;
+    private Vibrator mVibrator;
+
+    private int mFeedbackCount = 3;
+    private int mVibrationDuration = 0;
+    private int mGrabbedState;
+    private int mActiveTarget = -1;
+    private float mGlowRadius;
+    private float mWaveCenterX;
+    private float mWaveCenterY;
+    private int mMaxTargetHeight;
+    private int mMaxTargetWidth;
+    private float mRingScaleFactor = 1f;
+    private boolean mAllowScaling;
+
+    private float mOuterRadius = 0.0f;
+    private float mSnapMargin = 0.0f;
+    private boolean mDragging;
+    private int mNewTargetResources;
+
+    private AccessibilityNodeProvider mAccessibilityNodeProvider;
+    private GlowpadExploreByTouchHelper mExploreByTouchHelper;
+
     private class AnimationBundle extends ArrayList<Tweener> {
-        private static final long serialVersionUID = -6319262269245852568L;
+        private static final long serialVersionUID = 0xA84D78726F127468L;
         private boolean mSuspended;
 
-        private AnimationBundle() {
-        }
-
-        /* synthetic */ AnimationBundle(GlowPadView glowPadView, AnonymousClass1 anonymousClass1) {
-            this();
-        }
-
         public void start() {
-            if (!this.mSuspended) {
-                int size = size();
-                for (int i = 0; i < size; i++) {
-                    ((Tweener) get(i)).animator.a();
-                }
+            if (mSuspended) return; // ignore attempts to start animations
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Tweener anim = get(i);
+                anim.animator.start();
             }
         }
 
         public void cancel() {
-            int size = size();
-            for (int i = 0; i < size; i++) {
-                ((Tweener) get(i)).animator.b();
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Tweener anim = get(i);
+                anim.animator.cancel();
             }
             clear();
         }
 
         public void stop() {
-            int size = size();
-            for (int i = 0; i < size; i++) {
-                ((Tweener) get(i)).animator.c();
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Tweener anim = get(i);
+                anim.animator.end();
             }
             clear();
         }
 
-        public void setSuspended(boolean z) {
-            this.mSuspended = z;
+        public void setSuspended(boolean suspend) {
+            mSuspended = suspend;
         }
-    }
+    };
+
+    private AnimatorListener mResetListener = new AnimatorListenerAdapter() {
+        public void onAnimationEnd(Animator animator) {
+            switchToState(STATE_IDLE, mWaveCenterX, mWaveCenterY);
+            dispatchOnFinishFinalAnimation();
+        }
+    };
+
+    private AnimatorListener mResetListenerWithPing = new AnimatorListenerAdapter() {
+        public void onAnimationEnd(Animator animator) {
+            ping();
+            switchToState(STATE_IDLE, mWaveCenterX, mWaveCenterY);
+            dispatchOnFinishFinalAnimation();
+        }
+    };
+
+    private AnimatorUpdateListener mUpdateListener = new AnimatorUpdateListener() {
+        public void onAnimationUpdate(ValueAnimator animation) {
+            invalidate();
+        }
+    };
+
+    private boolean mAnimatingTargets;
+    private AnimatorListener mTargetUpdateListener = new AnimatorListenerAdapter() {
+        public void onAnimationEnd(Animator animator) {
+            if (mNewTargetResources != 0) {
+                internalSetTargetResources(mNewTargetResources);
+                mNewTargetResources = 0;
+                hideTargets(false, false);
+            }
+            mAnimatingTargets = false;
+        }
+    };
+    private int mTargetResourceId;
+    private int mTargetDescriptionsResourceId;
+    private int mDirectionDescriptionsResourceId;
+    private boolean mAlwaysTrackFinger;
+    private int mHorizontalInset;
+    private int mVerticalInset;
+    private int mGravity = Gravity.TOP;
+    private boolean mInitialLayout = true;
+    private Tweener mBackgroundAnimator;
+    private PointCloud mPointCloud;
+    private float mInnerRadius;
+    private int mPointerId;
 
     public GlowPadView(Context context) {
         this(context, null);
     }
 
-    public GlowPadView(Context context, AttributeSet attributeSet) {
-        boolean z = true;
-        Drawable drawable = null;
-        super(context, attributeSet);
-        this.mTargetDrawables = new ArrayList();
-        this.mWaveAnimations = new AnimationBundle();
-        this.mTargetAnimations = new AnimationBundle();
-        this.mGlowAnimations = new AnimationBundle();
-        this.mFeedbackCount = 3;
-        this.mVibrationDuration = 0;
-        this.mActiveTarget = -1;
-        this.mRingScaleFactor = 1.0f;
-        this.mOuterRadius = 0.0f;
-        this.mSnapMargin = 0.0f;
-        this.mResetListener = new com.a.a.b() {
-            public void onAnimationEnd(com.a.a.a aVar) {
-                GlowPadView.this.switchToState(0, GlowPadView.this.mWaveCenterX, GlowPadView.this.mWaveCenterY);
-                GlowPadView.this.dispatchOnFinishFinalAnimation();
-            }
-        };
-        this.mResetListenerWithPing = new com.a.a.b() {
-            public void onAnimationEnd(com.a.a.a aVar) {
-                GlowPadView.this.ping();
-                GlowPadView.this.switchToState(0, GlowPadView.this.mWaveCenterX, GlowPadView.this.mWaveCenterY);
-                GlowPadView.this.dispatchOnFinishFinalAnimation();
-            }
-        };
-        this.mUpdateListener = new b() {
-            public void onAnimationUpdate(m mVar) {
-                GlowPadView.this.invalidate();
-            }
-        };
-        this.mTargetUpdateListener = new com.a.a.b() {
-            public void onAnimationEnd(com.a.a.a aVar) {
-                if (GlowPadView.this.mNewTargetResources != 0) {
-                    GlowPadView.this.internalSetTargetResources(GlowPadView.this.mNewTargetResources);
-                    GlowPadView.this.mNewTargetResources = 0;
-                    GlowPadView.this.hideTargets(false, false);
-                }
-                GlowPadView.this.mAnimatingTargets = false;
-            }
-        };
-        this.mGravity = 48;
-        this.mInitialLayout = true;
-        Resources resources = context.getResources();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, c.GlowPadView);
-        try {
-            this.mInnerRadius = obtainStyledAttributes.getDimension(c.GlowPadView_innerRadius, this.mInnerRadius);
-            this.mOuterRadius = obtainStyledAttributes.getDimension(c.GlowPadView_outerRadius, this.mOuterRadius);
-            this.mSnapMargin = obtainStyledAttributes.getDimension(c.GlowPadView_snapMargin, this.mSnapMargin);
-            this.mVibrationDuration = obtainStyledAttributes.getInt(c.GlowPadView_vibrationDuration, this.mVibrationDuration);
-            this.mFeedbackCount = obtainStyledAttributes.getInt(c.GlowPadView_feedbackCount, this.mFeedbackCount);
-            this.mAllowScaling = obtainStyledAttributes.getBoolean(c.GlowPadView_allowScaling, false);
-            TypedValue peekValue = obtainStyledAttributes.peekValue(c.GlowPadView_handleDrawable);
-            this.mHandleDrawable = new TargetDrawable(resources, peekValue != null ? peekValue.resourceId : 0, 2);
-            this.mHandleDrawable.setState(TargetDrawable.STATE_INACTIVE);
-            this.mOuterRing = new TargetDrawable(resources, getResourceId(obtainStyledAttributes, c.GlowPadView_outerRingDrawable), 1);
-            this.mAlwaysTrackFinger = obtainStyledAttributes.getBoolean(c.GlowPadView_alwaysTrackFinger, false);
-            int resourceId = getResourceId(obtainStyledAttributes, c.GlowPadView_pointDrawable);
-            if (resourceId != 0) {
-                drawable = resources.getDrawable(resourceId);
-            }
-            this.mGlowRadius = obtainStyledAttributes.getDimension(c.GlowPadView_glowRadius, 0.0f);
-            peekValue = new TypedValue();
-            if (obtainStyledAttributes.getValue(c.GlowPadView_targetDrawables, peekValue)) {
-                internalSetTargetResources(peekValue.resourceId);
-            }
-            if (this.mTargetDrawables == null || this.mTargetDrawables.size() == 0) {
-                throw new IllegalStateException("Must specify at least one target drawable");
-            }
-            if (obtainStyledAttributes.getValue(c.GlowPadView_targetDescriptions, peekValue)) {
-                int i = peekValue.resourceId;
-                if (i == 0) {
-                    throw new IllegalStateException("Must specify target descriptions");
-                }
-                setTargetDescriptionsResourceId(i);
-            }
-            if (obtainStyledAttributes.getValue(c.GlowPadView_directionDescriptions, peekValue)) {
-                resourceId = peekValue.resourceId;
-                if (resourceId == 0) {
-                    throw new IllegalStateException("Must specify direction descriptions");
-                }
-                setDirectionDescriptionsResourceId(resourceId);
-            }
-            this.mGravity = obtainStyledAttributes.getInt(c.GlowPadView_android_gravity, 48);
-            if (this.mVibrationDuration <= 0) {
-                z = false;
-            }
-            setVibrateEnabled(z);
-            assignDefaultsIfNeeded();
-            this.mPointCloud = new PointCloud(drawable);
-            this.mPointCloud.makePointCloud(this.mInnerRadius, this.mOuterRadius);
-            this.mPointCloud.glowManager.setRadius(this.mGlowRadius);
-        } finally {
-            obtainStyledAttributes.recycle();
+    public GlowPadView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        Resources res = context.getResources();
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GlowPadView);
+        mInnerRadius = a.getDimension(R.styleable.GlowPadView_innerRadius, mInnerRadius);
+        mOuterRadius = a.getDimension(R.styleable.GlowPadView_outerRadius, mOuterRadius);
+        mSnapMargin = a.getDimension(R.styleable.GlowPadView_snapMargin, mSnapMargin);
+        mVibrationDuration = a.getInt(R.styleable.GlowPadView_vibrationDuration,
+                mVibrationDuration);
+        mFeedbackCount = a.getInt(R.styleable.GlowPadView_feedbackCount,
+                mFeedbackCount);
+        mAllowScaling = a.getBoolean(R.styleable.GlowPadView_allowScaling, false);
+        TypedValue handle = a.peekValue(R.styleable.GlowPadView_handleDrawable);
+        setHandleDrawable(handle != null ? handle.resourceId : R.drawable.ic_incall_audio_handle);
+        mOuterRing = new TargetDrawable(res,
+                getResourceId(a, R.styleable.GlowPadView_outerRingDrawable), 1);
+
+        mAlwaysTrackFinger = a.getBoolean(R.styleable.GlowPadView_alwaysTrackFinger, false);
+
+        int pointId = getResourceId(a, R.styleable.GlowPadView_pointDrawable);
+        Drawable pointDrawable = pointId != 0 ? res.getDrawable(pointId) : null;
+        mGlowRadius = a.getDimension(R.styleable.GlowPadView_glowRadius, 0.0f);
+
+        TypedValue outValue = new TypedValue();
+
+        // Read array of target drawables
+        if (a.getValue(R.styleable.GlowPadView_targetDrawables, outValue)) {
+            internalSetTargetResources(outValue.resourceId);
         }
+        if (mTargetDrawables == null || mTargetDrawables.size() == 0) {
+            throw new IllegalStateException("Must specify at least one target drawable");
+        }
+
+        // Read array of target descriptions
+        if (a.getValue(R.styleable.GlowPadView_targetDescriptions, outValue)) {
+            final int resourceId = outValue.resourceId;
+            if (resourceId == 0) {
+                throw new IllegalStateException("Must specify target descriptions");
+            }
+            setTargetDescriptionsResourceId(resourceId);
+        }
+
+        // Read array of direction descriptions
+        if (a.getValue(R.styleable.GlowPadView_directionDescriptions, outValue)) {
+            final int resourceId = outValue.resourceId;
+            if (resourceId == 0) {
+                throw new IllegalStateException("Must specify direction descriptions");
+            }
+            setDirectionDescriptionsResourceId(resourceId);
+        }
+
+        // Use gravity attribute from LinearLayout
+        //a = context.obtainStyledAttributes(attrs, R.styleable.LinearLayout);
+        mGravity = a.getInt(R.styleable.GlowPadView_android_gravity, Gravity.TOP);
+        a.recycle();
+
+
+        setVibrateEnabled(mVibrationDuration > 0);
+
+        assignDefaultsIfNeeded();
+
+        mPointCloud = new PointCloud(pointDrawable);
+        mPointCloud.makePointCloud(mInnerRadius, mOuterRadius);
+        mPointCloud.glowManager.setRadius(mGlowRadius);
+
+        mExploreByTouchHelper = new GlowpadExploreByTouchHelper(this);
+        ViewCompat.setAccessibilityDelegate(this, mExploreByTouchHelper);
     }
 
-    private int getResourceId(TypedArray typedArray, int i) {
-        TypedValue peekValue = typedArray.peekValue(i);
-        return peekValue == null ? 0 : peekValue.resourceId;
+    private int getResourceId(TypedArray a, int id) {
+        TypedValue tv = a.peekValue(id);
+        return tv == null ? 0 : tv.resourceId;
     }
 
     private void dump() {
-        Log.v(TAG, "Outer Radius = " + this.mOuterRadius);
-        Log.v(TAG, "SnapMargin = " + this.mSnapMargin);
-        Log.v(TAG, "FeedbackCount = " + this.mFeedbackCount);
-        Log.v(TAG, "VibrationDuration = " + this.mVibrationDuration);
-        Log.v(TAG, "GlowRadius = " + this.mGlowRadius);
-        Log.v(TAG, "WaveCenterX = " + this.mWaveCenterX);
-        Log.v(TAG, "WaveCenterY = " + this.mWaveCenterY);
+        Log.v(TAG, "Outer Radius = " + mOuterRadius);
+        Log.v(TAG, "SnapMargin = " + mSnapMargin);
+        Log.v(TAG, "FeedbackCount = " + mFeedbackCount);
+        Log.v(TAG, "VibrationDuration = " + mVibrationDuration);
+        Log.v(TAG, "GlowRadius = " + mGlowRadius);
+        Log.v(TAG, "WaveCenterX = " + mWaveCenterX);
+        Log.v(TAG, "WaveCenterY = " + mWaveCenterY);
     }
 
     public void suspendAnimations() {
-        this.mWaveAnimations.setSuspended(true);
-        this.mTargetAnimations.setSuspended(true);
-        this.mGlowAnimations.setSuspended(true);
+        mWaveAnimations.setSuspended(true);
+        mTargetAnimations.setSuspended(true);
+        mGlowAnimations.setSuspended(true);
     }
 
     public void resumeAnimations() {
-        this.mWaveAnimations.setSuspended(false);
-        this.mTargetAnimations.setSuspended(false);
-        this.mGlowAnimations.setSuspended(false);
-        this.mWaveAnimations.start();
-        this.mTargetAnimations.start();
-        this.mGlowAnimations.start();
+        mWaveAnimations.setSuspended(false);
+        mTargetAnimations.setSuspended(false);
+        mGlowAnimations.setSuspended(false);
+        mWaveAnimations.start();
+        mTargetAnimations.start();
+        mGlowAnimations.start();
     }
 
+    @Override
     protected int getSuggestedMinimumWidth() {
-        return (int) (Math.max((float) this.mOuterRing.getWidth(), 2.0f * this.mOuterRadius) + ((float) this.mMaxTargetWidth));
+        // View should be large enough to contain the background + handle and
+        // target drawable on either edge.
+        return (int) (Math.max(mOuterRing.getWidth(), 2 * mOuterRadius) + mMaxTargetWidth);
     }
 
+    @Override
     protected int getSuggestedMinimumHeight() {
-        return (int) (Math.max((float) this.mOuterRing.getHeight(), 2.0f * this.mOuterRadius) + ((float) this.mMaxTargetHeight));
+        // View should be large enough to contain the unlock ring + target and
+        // target drawable on either edge
+        return (int) (Math.max(mOuterRing.getHeight(), 2 * mOuterRadius) + mMaxTargetHeight);
     }
 
+    /**
+     * This gets the suggested width accounting for the ring's scale factor.
+     */
     protected int getScaledSuggestedMinimumWidth() {
-        return (int) ((this.mRingScaleFactor * Math.max((float) this.mOuterRing.getWidth(), 2.0f * this.mOuterRadius)) + ((float) this.mMaxTargetWidth));
+        return (int) (mRingScaleFactor * Math.max(mOuterRing.getWidth(), 2 * mOuterRadius)
+                + mMaxTargetWidth);
     }
 
+    /**
+     * This gets the suggested height accounting for the ring's scale factor.
+     */
     protected int getScaledSuggestedMinimumHeight() {
-        return (int) ((this.mRingScaleFactor * Math.max((float) this.mOuterRing.getHeight(), 2.0f * this.mOuterRadius)) + ((float) this.mMaxTargetHeight));
+        return (int) (mRingScaleFactor * Math.max(mOuterRing.getHeight(), 2 * mOuterRadius)
+                + mMaxTargetHeight);
     }
 
-    private int resolveMeasured(int i, int i2) {
-        int size = MeasureSpec.getSize(i);
-        switch (MeasureSpec.getMode(i)) {
-            case Integer.MIN_VALUE:
-                return Math.min(size, i2);
-            case 0:
-                return i2;
+    private int resolveMeasured(int measureSpec, int desired)
+    {
+        int result = 0;
+        int specSize = MeasureSpec.getSize(measureSpec);
+        switch (MeasureSpec.getMode(measureSpec)) {
+            case MeasureSpec.UNSPECIFIED:
+                result = desired;
+                break;
+            case MeasureSpec.AT_MOST:
+                result = Math.min(specSize, desired);
+                break;
+            case MeasureSpec.EXACTLY:
             default:
-                return size;
+                result = specSize;
         }
+        return result;
     }
 
-    protected void onMeasure(int i, int i2) {
-        int suggestedMinimumWidth = getSuggestedMinimumWidth();
-        int suggestedMinimumHeight = getSuggestedMinimumHeight();
-        int resolveMeasured = resolveMeasured(i, suggestedMinimumWidth);
-        int resolveMeasured2 = resolveMeasured(i2, suggestedMinimumHeight);
-        this.mRingScaleFactor = computeScaleFactor(suggestedMinimumWidth, suggestedMinimumHeight, resolveMeasured, resolveMeasured2);
-        computeInsets(resolveMeasured - getScaledSuggestedMinimumWidth(), resolveMeasured2 - getScaledSuggestedMinimumHeight());
-        setMeasuredDimension(resolveMeasured, resolveMeasured2);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int minimumWidth = getSuggestedMinimumWidth();
+        final int minimumHeight = getSuggestedMinimumHeight();
+        int computedWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
+        int computedHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
+
+        mRingScaleFactor = computeScaleFactor(minimumWidth, minimumHeight,
+                computedWidth, computedHeight);
+
+        int scaledWidth = getScaledSuggestedMinimumWidth();
+        int scaledHeight = getScaledSuggestedMinimumHeight();
+
+        computeInsets(computedWidth - scaledWidth, computedHeight - scaledHeight);
+        setMeasuredDimension(computedWidth, computedHeight);
     }
 
-    private void switchToState(int i, float f, float f2) {
-        switch (i) {
-            case 0:
+    private void switchToState(int state, float x, float y) {
+        switch (state) {
+            case STATE_IDLE:
                 deactivateTargets();
                 hideGlow(0, 0, 0.0f, null);
                 startBackgroundAnimation(0, 0.0f);
-                this.mHandleDrawable.setState(TargetDrawable.STATE_INACTIVE);
-                this.mHandleDrawable.setAlpha(1.0f);
-                return;
-            case 1:
+                mHandleDrawable.setState(TargetDrawable.STATE_INACTIVE);
+                mHandleDrawable.setAlpha(1.0f);
+                break;
+
+            case STATE_START:
                 startBackgroundAnimation(0, 0.0f);
-                return;
-            case 2:
-                this.mHandleDrawable.setAlpha(0.0f);
+                break;
+
+            case STATE_FIRST_TOUCH:
+                mHandleDrawable.setAlpha(0.0f);
                 deactivateTargets();
                 showTargets(true);
-                startBackgroundAnimation(ActivationAdapter.OP_CONFIGURATION_INITIAL, 1.0f);
-                setGrabbedState(1);
-                if (((AccessibilityManager) getContext().getSystemService("accessibility")).isEnabled()) {
+                startBackgroundAnimation(INITIAL_SHOW_HANDLE_DURATION, 1.0f);
+                setGrabbedState(OnTriggerListener.CENTER_HANDLE);
+
+                final AccessibilityManager accessibilityManager =
+                    (AccessibilityManager) getContext().getSystemService(
+                            Context.ACCESSIBILITY_SERVICE);
+                if (accessibilityManager.isEnabled()) {
                     announceTargets();
-                    return;
                 }
-                return;
-            case 3:
-                this.mHandleDrawable.setAlpha(0.0f);
-                showGlow(0, 0, 1.0f, null);
-                return;
-            case 4:
-                this.mHandleDrawable.setAlpha(0.0f);
-                showGlow(0, 0, 0.0f, null);
-                return;
-            case 5:
+                break;
+
+            case STATE_TRACKING:
+                mHandleDrawable.setAlpha(0.0f);
+                break;
+
+            case STATE_SNAP:
+                // TODO: Add transition states (see list_selector_background_transition.xml)
+                mHandleDrawable.setAlpha(0.0f);
+                showGlow(REVEAL_GLOW_DURATION , REVEAL_GLOW_DELAY, 0.0f, null);
+                break;
+
+            case STATE_FINISH:
                 doFinish();
-                return;
-            default:
-                return;
+                break;
         }
     }
 
-    private void showGlow(int i, int i2, float f, a aVar) {
-        this.mGlowAnimations.cancel();
-        this.mGlowAnimations.add(Tweener.to(this.mPointCloud.glowManager, (long) i, "ease", Cubic.easeIn, "delay", Integer.valueOf(i2), "alpha", Float.valueOf(f), "onUpdate", this.mUpdateListener, "onComplete", aVar));
-        this.mGlowAnimations.start();
+    private void showGlow(int duration, int delay, float finalAlpha,
+            AnimatorListener finishListener) {
+        mGlowAnimations.cancel();
+        mGlowAnimations.add(Tweener.to(mPointCloud.glowManager, duration,
+                "ease", Ease.Cubic.easeIn,
+                "delay", delay,
+                "alpha", finalAlpha,
+                "onUpdate", mUpdateListener,
+                "onComplete", finishListener));
+        mGlowAnimations.start();
     }
 
-    private void hideGlow(int i, int i2, float f, a aVar) {
-        this.mGlowAnimations.cancel();
-        this.mGlowAnimations.add(Tweener.to(this.mPointCloud.glowManager, (long) i, "ease", Quart.easeOut, "delay", Integer.valueOf(i2), "alpha", Float.valueOf(f), "x", Float.valueOf(0.0f), "y", Float.valueOf(0.0f), "onUpdate", this.mUpdateListener, "onComplete", aVar));
-        this.mGlowAnimations.start();
+    private void hideGlow(int duration, int delay, float finalAlpha,
+            AnimatorListener finishListener) {
+        mGlowAnimations.cancel();
+        mGlowAnimations.add(Tweener.to(mPointCloud.glowManager, duration,
+                "ease", Ease.Quart.easeOut,
+                "delay", delay,
+                "alpha", finalAlpha,
+                "x", 0.0f,
+                "y", 0.0f,
+                "onUpdate", mUpdateListener,
+                "onComplete", finishListener));
+        mGlowAnimations.start();
     }
 
     private void deactivateTargets() {
-        int size = this.mTargetDrawables.size();
-        for (int i = 0; i < size; i++) {
-            ((TargetDrawable) this.mTargetDrawables.get(i)).setState(TargetDrawable.STATE_INACTIVE);
+        final int count = mTargetDrawables.size();
+        for (int i = 0; i < count; i++) {
+            TargetDrawable target = mTargetDrawables.get(i);
+            target.setState(TargetDrawable.STATE_INACTIVE);
         }
-        this.mActiveTarget = -1;
+        mActiveTarget = -1;
     }
 
-    private void dispatchTriggerEvent(int i) {
+    /**
+     * Dispatches a trigger event to listener. Ignored if a listener is not set.
+     * @param whichTarget the target that was triggered.
+     */
+    private void dispatchTriggerEvent(int whichTarget) {
         vibrate();
-        if (this.mOnTriggerListener != null) {
-            this.mOnTriggerListener.onTrigger(this, i);
+        if (mOnTriggerListener != null) {
+            mOnTriggerListener.onTrigger(this, whichTarget);
         }
     }
 
     private void dispatchOnFinishFinalAnimation() {
-        if (this.mOnTriggerListener != null) {
-            this.mOnTriggerListener.onFinishFinalAnimation();
+        if (mOnTriggerListener != null) {
+            mOnTriggerListener.onFinishFinalAnimation();
         }
     }
 
     private void doFinish() {
-        int i = this.mActiveTarget;
-        if (i != -1) {
-            highlightSelected(i);
-            hideGlow(ActivationAdapter.OP_CONFIGURATION_INITIAL, RETURN_TO_HOME_DELAY, 0.0f, this.mResetListener);
-            dispatchTriggerEvent(i);
-            if (!this.mAlwaysTrackFinger) {
-                this.mTargetAnimations.stop();
+        final int activeTarget = mActiveTarget;
+        final boolean targetHit =  activeTarget != -1;
+
+        if (targetHit) {
+            if (DEBUG) Log.v(TAG, "Finish with target hit = " + targetHit);
+
+            highlightSelected(activeTarget);
+
+            // Inform listener of any active targets.  Typically only one will be active.
+            hideGlow(RETURN_TO_HOME_DURATION, RETURN_TO_HOME_DELAY, 0.0f, mResetListener);
+            dispatchTriggerEvent(activeTarget);
+            if (!mAlwaysTrackFinger) {
+                // Force ring and targets to finish animation to final expanded state
+                mTargetAnimations.stop();
             }
         } else {
-            hideGlow(ActivationAdapter.OP_CONFIGURATION_INITIAL, 0, 0.0f, this.mResetListenerWithPing);
+            // Animate handle back to the center based on current state.
+            hideGlow(HIDE_ANIMATION_DURATION, 0, 0.0f, mResetListenerWithPing);
             hideTargets(true, false);
         }
-        setGrabbedState(0);
+
+        setGrabbedState(OnTriggerListener.NO_HANDLE);
     }
 
-    private void highlightSelected(int i) {
-        ((TargetDrawable) this.mTargetDrawables.get(i)).setState(TargetDrawable.STATE_ACTIVE);
-        hideUnselected(i);
+    private void highlightSelected(int activeTarget) {
+        // Highlight the given target and fade others
+        mTargetDrawables.get(activeTarget).setState(TargetDrawable.STATE_ACTIVE);
+        hideUnselected(activeTarget);
     }
 
-    private void hideUnselected(int i) {
-        for (int i2 = 0; i2 < this.mTargetDrawables.size(); i2++) {
-            if (i2 != i) {
-                ((TargetDrawable) this.mTargetDrawables.get(i2)).setAlpha(0.0f);
+    private void hideUnselected(int active) {
+        for (int i = 0; i < mTargetDrawables.size(); i++) {
+            if (i != active) {
+                mTargetDrawables.get(i).setAlpha(0.0f);
             }
         }
     }
 
-    private void hideTargets(boolean z, boolean z2) {
-        this.mTargetAnimations.cancel();
-        this.mAnimatingTargets = z;
-        int i = z ? ActivationAdapter.OP_CONFIGURATION_INITIAL : 0;
-        int i2 = z ? ActivationAdapter.OP_CONFIGURATION_INITIAL : 0;
-        float f = z2 ? 1.0f : TARGET_SCALE_COLLAPSED;
-        int size = this.mTargetDrawables.size();
-        Interpolator interpolator = Cubic.easeOut;
-        for (int i3 = 0; i3 < size; i3++) {
-            TargetDrawable targetDrawable = (TargetDrawable) this.mTargetDrawables.get(i3);
-            targetDrawable.setState(TargetDrawable.STATE_INACTIVE);
-            this.mTargetAnimations.add(Tweener.to(targetDrawable, (long) i, "ease", interpolator, "alpha", Float.valueOf(0.0f), "scaleX", Float.valueOf(f), "scaleY", Float.valueOf(f), "delay", Integer.valueOf(i2), "onUpdate", this.mUpdateListener));
+    private void hideTargets(boolean animate, boolean expanded) {
+        mTargetAnimations.cancel();
+        // Note: these animations should complete at the same time so that we can swap out
+        // the target assets asynchronously from the setTargetResources() call.
+        mAnimatingTargets = animate;
+        final int duration = animate ? HIDE_ANIMATION_DURATION : 0;
+        final int delay = animate ? HIDE_ANIMATION_DELAY : 0;
+
+        final float targetScale = expanded ?
+                TARGET_SCALE_EXPANDED : TARGET_SCALE_COLLAPSED;
+        final int length = mTargetDrawables.size();
+        final TimeInterpolator interpolator = Ease.Cubic.easeOut;
+        for (int i = 0; i < length; i++) {
+            TargetDrawable target = mTargetDrawables.get(i);
+            target.setState(TargetDrawable.STATE_INACTIVE);
+            mTargetAnimations.add(Tweener.to(target, duration,
+                    "ease", interpolator,
+                    "alpha", 0.0f,
+                    "scaleX", targetScale,
+                    "scaleY", targetScale,
+                    "delay", delay,
+                    "onUpdate", mUpdateListener));
         }
-        float f2 = (z2 ? 1.0f : RING_SCALE_COLLAPSED) * this.mRingScaleFactor;
-        this.mTargetAnimations.add(Tweener.to(this.mOuterRing, (long) i, "ease", interpolator, "alpha", Float.valueOf(0.0f), "scaleX", Float.valueOf(f2), "scaleY", Float.valueOf(f2), "delay", Integer.valueOf(i2), "onUpdate", this.mUpdateListener, "onComplete", this.mTargetUpdateListener));
-        this.mTargetAnimations.start();
+
+        float ringScaleTarget = expanded ?
+                RING_SCALE_EXPANDED : RING_SCALE_COLLAPSED;
+        ringScaleTarget *= mRingScaleFactor;
+        mTargetAnimations.add(Tweener.to(mOuterRing, duration,
+                "ease", interpolator,
+                "alpha", 0.0f,
+                "scaleX", ringScaleTarget,
+                "scaleY", ringScaleTarget,
+                "delay", delay,
+                "onUpdate", mUpdateListener,
+                "onComplete", mTargetUpdateListener));
+
+        mTargetAnimations.start();
     }
 
-    private void showTargets(boolean z) {
-        this.mTargetAnimations.stop();
-        this.mAnimatingTargets = z;
-        int i = z ? SHOW_ANIMATION_DELAY : 0;
-        int i2 = z ? ActivationAdapter.OP_CONFIGURATION_INITIAL : 0;
-        int size = this.mTargetDrawables.size();
-        for (int i3 = 0; i3 < size; i3++) {
-            TargetDrawable targetDrawable = (TargetDrawable) this.mTargetDrawables.get(i3);
-            targetDrawable.setState(TargetDrawable.STATE_INACTIVE);
-            this.mTargetAnimations.add(Tweener.to(targetDrawable, (long) i2, "ease", Cubic.easeOut, "alpha", Float.valueOf(1.0f), "scaleX", Float.valueOf(1.0f), "scaleY", Float.valueOf(1.0f), "delay", Integer.valueOf(i), "onUpdate", this.mUpdateListener));
+    private void showTargets(boolean animate) {
+        mTargetAnimations.stop();
+        mAnimatingTargets = animate;
+        final int delay = animate ? SHOW_ANIMATION_DELAY : 0;
+        final int duration = animate ? SHOW_ANIMATION_DURATION : 0;
+        final int length = mTargetDrawables.size();
+        for (int i = 0; i < length; i++) {
+            TargetDrawable target = mTargetDrawables.get(i);
+            target.setState(TargetDrawable.STATE_INACTIVE);
+            mTargetAnimations.add(Tweener.to(target, duration,
+                    "ease", Ease.Cubic.easeOut,
+                    "alpha", 1.0f,
+                    "scaleX", 1.0f,
+                    "scaleY", 1.0f,
+                    "delay", delay,
+                    "onUpdate", mUpdateListener));
         }
-        float f = this.mRingScaleFactor * 1.0f;
-        this.mTargetAnimations.add(Tweener.to(this.mOuterRing, (long) i2, "ease", Cubic.easeOut, "alpha", Float.valueOf(1.0f), "scaleX", Float.valueOf(f), "scaleY", Float.valueOf(f), "delay", Integer.valueOf(i), "onUpdate", this.mUpdateListener, "onComplete", this.mTargetUpdateListener));
-        this.mTargetAnimations.start();
+        float ringScale = mRingScaleFactor * RING_SCALE_EXPANDED;
+        mTargetAnimations.add(Tweener.to(mOuterRing, duration,
+                "ease", Ease.Cubic.easeOut,
+                "alpha", 1.0f,
+                "scaleX", ringScale,
+                "scaleY", ringScale,
+                "delay", delay,
+                "onUpdate", mUpdateListener,
+                "onComplete", mTargetUpdateListener));
+
+        mTargetAnimations.start();
     }
 
     private void vibrate() {
-        if (this.mVibrator != null) {
-            this.mVibrator.vibrate((long) this.mVibrationDuration);
+        if (mVibrator != null) {
+            mVibrator.vibrate(mVibrationDuration);
         }
     }
 
-    private ArrayList<TargetDrawable> loadDrawableArray(int i) {
-        Resources resources = getContext().getResources();
-        TypedArray obtainTypedArray = resources.obtainTypedArray(i);
-        int length = obtainTypedArray.length();
-        ArrayList<TargetDrawable> arrayList = new ArrayList(length);
-        for (int i2 = 0; i2 < length; i2++) {
-            int i3;
-            TypedValue peekValue = obtainTypedArray.peekValue(i2);
-            if (peekValue != null) {
-                i3 = peekValue.resourceId;
-            } else {
-                i3 = 0;
-            }
-            arrayList.add(new TargetDrawable(resources, i3, 3));
+    private ArrayList<TargetDrawable> loadDrawableArray(int resourceId) {
+        Resources res = getContext().getResources();
+        TypedArray array = res.obtainTypedArray(resourceId);
+        final int count = array.length();
+        ArrayList<TargetDrawable> drawables = new ArrayList<TargetDrawable>(count);
+        for (int i = 0; i < count; i++) {
+            TypedValue value = array.peekValue(i);
+            TargetDrawable target = new TargetDrawable(res, value != null ? value.resourceId : 0, 3);
+            drawables.add(target);
         }
-        obtainTypedArray.recycle();
-        return arrayList;
+        array.recycle();
+        return drawables;
     }
 
-    private void internalSetTargetResources(int i) {
-        ArrayList loadDrawableArray = loadDrawableArray(i);
-        this.mTargetDrawables = loadDrawableArray;
-        this.mTargetResourceId = i;
-        int width = this.mHandleDrawable.getWidth();
-        int height = this.mHandleDrawable.getHeight();
-        int size = loadDrawableArray.size();
-        int i2 = width;
-        width = height;
-        for (height = 0; height < size; height++) {
-            TargetDrawable targetDrawable = (TargetDrawable) loadDrawableArray.get(height);
-            i2 = Math.max(i2, targetDrawable.getWidth());
-            width = Math.max(width, targetDrawable.getHeight());
-        }
-        if (this.mMaxTargetWidth == i2 && this.mMaxTargetHeight == width) {
-            updateTargetPositions(this.mWaveCenterX, this.mWaveCenterY);
-            updatePointCloudPosition(this.mWaveCenterX, this.mWaveCenterY);
-            return;
-        }
-        this.mMaxTargetWidth = i2;
-        this.mMaxTargetHeight = width;
-        requestLayout();
-    }
+    private void internalSetTargetResources(int resourceId) {
+        final ArrayList<TargetDrawable> targets = loadDrawableArray(resourceId);
+        mTargetDrawables = targets;
+        mTargetResourceId = resourceId;
 
-    public void setTargetResources(int i) {
-        if (this.mAnimatingTargets) {
-            this.mNewTargetResources = i;
+        int maxWidth = mHandleDrawable.getWidth();
+        int maxHeight = mHandleDrawable.getHeight();
+        final int count = targets.size();
+        for (int i = 0; i < count; i++) {
+            TargetDrawable target = targets.get(i);
+            maxWidth = Math.max(maxWidth, target.getWidth());
+            maxHeight = Math.max(maxHeight, target.getHeight());
+        }
+        if (mMaxTargetWidth != maxWidth || mMaxTargetHeight != maxHeight) {
+            mMaxTargetWidth = maxWidth;
+            mMaxTargetHeight = maxHeight;
+            requestLayout(); // required to resize layout and call updateTargetPositions()
         } else {
-            internalSetTargetResources(i);
+            updateTargetPositions(mWaveCenterX, mWaveCenterY);
+            updatePointCloudPosition(mWaveCenterX, mWaveCenterY);
+        }
+    }
+    /**
+     * Loads an array of drawables from the given resourceId.
+     *
+     * @param resourceId
+     */
+    public void setTargetResources(int resourceId) {
+        if (mAnimatingTargets) {
+            // postpone this change until we return to the initial state
+            mNewTargetResources = resourceId;
+        } else {
+            internalSetTargetResources(resourceId);
         }
     }
 
     public int getTargetResourceId() {
-        return this.mTargetResourceId;
+        return mTargetResourceId;
     }
 
-    public void setTargetDescriptionsResourceId(int i) {
-        this.mTargetDescriptionsResourceId = i;
-        if (this.mTargetDescriptions != null) {
-            this.mTargetDescriptions.clear();
-        }
-    }
-
-    public int getTargetDescriptionsResourceId() {
-        return this.mTargetDescriptionsResourceId;
-    }
-
-    public void setDirectionDescriptionsResourceId(int i) {
-        this.mDirectionDescriptionsResourceId = i;
-        if (this.mDirectionDescriptions != null) {
-            this.mDirectionDescriptions.clear();
-        }
-    }
-
-    public int getDirectionDescriptionsResourceId() {
-        return this.mDirectionDescriptionsResourceId;
-    }
-
-    public void setVibrateEnabled(boolean z) {
-        if (z && this.mVibrator == null) {
-            this.mVibrator = (Vibrator) getContext().getSystemService("vibrator");
+    /**
+     * Sets the handle drawable to the drawable specified by the resource ID.
+     * @param resourceId
+     */
+    public void setHandleDrawable(int resourceId) {
+        if (mHandleDrawable != null) {
+            mHandleDrawable.setDrawable(getResources(), resourceId);
         } else {
-            this.mVibrator = null;
+            mHandleDrawable = new TargetDrawable(getResources(), resourceId, 1);
+        }
+        mHandleDrawable.setState(TargetDrawable.STATE_INACTIVE);
+    }
+
+    /**
+     * Sets the resource id specifying the target descriptions for accessibility.
+     *
+     * @param resourceId The resource id.
+     */
+    public void setTargetDescriptionsResourceId(int resourceId) {
+        mTargetDescriptionsResourceId = resourceId;
+        if (mTargetDescriptions != null) {
+            mTargetDescriptions.clear();
         }
     }
 
+    /**
+     * Gets the resource id specifying the target descriptions for accessibility.
+     *
+     * @return The resource id.
+     */
+    public int getTargetDescriptionsResourceId() {
+        return mTargetDescriptionsResourceId;
+    }
+
+    /**
+     * Sets the resource id specifying the target direction descriptions for accessibility.
+     *
+     * @param resourceId The resource id.
+     */
+    public void setDirectionDescriptionsResourceId(int resourceId) {
+        mDirectionDescriptionsResourceId = resourceId;
+        if (mDirectionDescriptions != null) {
+            mDirectionDescriptions.clear();
+        }
+    }
+
+    /**
+     * Gets the resource id specifying the target direction descriptions.
+     *
+     * @return The resource id.
+     */
+    public int getDirectionDescriptionsResourceId() {
+        return mDirectionDescriptionsResourceId;
+    }
+
+    /**
+     * Enable or disable vibrate on touch.
+     *
+     * @param enabled
+     */
+    public void setVibrateEnabled(boolean enabled) {
+        if (enabled && mVibrator == null) {
+            mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        } else {
+            mVibrator = null;
+        }
+    }
+
+    /**
+     * Starts wave animation.
+     *
+     */
     public void ping() {
-        if (this.mFeedbackCount > 0) {
-            int i;
-            AnimationBundle animationBundle = this.mWaveAnimations;
-            if (animationBundle.size() <= 0 || !((Tweener) animationBundle.get(0)).animator.k() || ((Tweener) animationBundle.get(0)).animator.i() >= 675) {
-                i = 1;
-            } else {
-                i = 0;
+        if (mFeedbackCount > 0) {
+            boolean doWaveAnimation = true;
+            final AnimationBundle waveAnimations = mWaveAnimations;
+
+            // Don't do a wave if there's already one in progress
+            if (waveAnimations.size() > 0 && waveAnimations.get(0).animator.isRunning()) {
+                long t = waveAnimations.get(0).animator.getCurrentPlayTime();
+                if (t < WAVE_ANIMATION_DURATION/2) {
+                    doWaveAnimation = false;
+                }
             }
-            if (i != 0) {
+
+            if (doWaveAnimation) {
                 startWaveAnimation();
             }
         }
     }
 
     private void stopAndHideWaveAnimation() {
-        this.mWaveAnimations.cancel();
-        this.mPointCloud.waveManager.setAlpha(0.0f);
+        mWaveAnimations.cancel();
+        mPointCloud.waveManager.setAlpha(0.0f);
     }
 
     private void startWaveAnimation() {
-        this.mWaveAnimations.cancel();
-        this.mPointCloud.waveManager.setAlpha(1.0f);
-        this.mPointCloud.waveManager.setRadius(((float) this.mHandleDrawable.getWidth()) / 2.0f);
-        this.mWaveAnimations.add(Tweener.to(this.mPointCloud.waveManager, 1350, "ease", Quad.easeOut, "delay", Integer.valueOf(0), "radius", Float.valueOf(this.mOuterRadius * 2.0f), "onUpdate", this.mUpdateListener, "onComplete", new com.a.a.b() {
-            public void onAnimationEnd(com.a.a.a aVar) {
-                GlowPadView.this.mPointCloud.waveManager.setRadius(0.0f);
-                GlowPadView.this.mPointCloud.waveManager.setAlpha(0.0f);
-            }
-        }));
-        this.mWaveAnimations.start();
+        mWaveAnimations.cancel();
+        mPointCloud.waveManager.setAlpha(1.0f);
+        mPointCloud.waveManager.setRadius(mHandleDrawable.getWidth()/2.0f);
+        mWaveAnimations.add(Tweener.to(mPointCloud.waveManager, WAVE_ANIMATION_DURATION,
+                "ease", Ease.Quad.easeOut,
+                "delay", 0,
+                "radius", 2.0f * mOuterRadius,
+                "onUpdate", mUpdateListener,
+                "onComplete",
+                new AnimatorListenerAdapter() {
+                    public void onAnimationEnd(Animator animator) {
+                        mPointCloud.waveManager.setRadius(0.0f);
+                        mPointCloud.waveManager.setAlpha(0.0f);
+                    }
+                }));
+        mWaveAnimations.start();
     }
 
-    public void reset(boolean z) {
-        this.mGlowAnimations.stop();
-        this.mTargetAnimations.stop();
+    /**
+     * Resets the widget to default state and cancels all animation. If animate is 'true', will
+     * animate objects into place. Otherwise, objects will snap back to place.
+     *
+     * @param animate
+     */
+    public void reset(boolean animate) {
+        mGlowAnimations.stop();
+        mTargetAnimations.stop();
         startBackgroundAnimation(0, 0.0f);
         stopAndHideWaveAnimation();
-        hideTargets(z, false);
+        hideTargets(animate, false);
         hideGlow(0, 0, 0.0f, null);
         Tweener.reset();
     }
 
-    private void startBackgroundAnimation(int i, float f) {
-        Drawable background = getBackground();
-        if (this.mAlwaysTrackFinger && background != null) {
-            if (this.mBackgroundAnimator != null) {
-                this.mBackgroundAnimator.animator.b();
+    private void startBackgroundAnimation(int duration, float alpha) {
+        final Drawable background = getBackground();
+        if (mAlwaysTrackFinger && background != null) {
+            if (mBackgroundAnimator != null) {
+                mBackgroundAnimator.animator.cancel();
             }
-            this.mBackgroundAnimator = Tweener.to(background, (long) i, "ease", Cubic.easeIn, "alpha", Integer.valueOf((int) (255.0f * f)), "delay", Integer.valueOf(SHOW_ANIMATION_DELAY));
-            this.mBackgroundAnimator.animator.a();
+            mBackgroundAnimator = Tweener.to(background, duration,
+                    "ease", Ease.Cubic.easeIn,
+                    "alpha", (int)(255.0f * alpha),
+                    "delay", SHOW_ANIMATION_DELAY);
+            mBackgroundAnimator.animator.start();
         }
     }
 
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        boolean z = false;
-        switch (motionEvent.getActionMasked()) {
-            case 0:
-            case 5:
-                handleDown(motionEvent);
-                handleMove(motionEvent);
-                z = true;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        final int action = event.getActionMasked();
+        boolean handled = false;
+        switch (action) {
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_DOWN:
+                if (DEBUG) Log.v(TAG, "*** DOWN ***");
+                handleDown(event);
+                handleMove(event);
+                handled = true;
                 break;
-            case 1:
-            case 6:
-                handleMove(motionEvent);
-                handleUp(motionEvent);
-                z = true;
+
+            case MotionEvent.ACTION_MOVE:
+                if (DEBUG) Log.v(TAG, "*** MOVE ***");
+                handleMove(event);
+                handled = true;
                 break;
-            case 2:
-                handleMove(motionEvent);
-                z = true;
+
+            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_UP:
+                if (DEBUG) Log.v(TAG, "*** UP ***");
+                handleMove(event);
+                handleUp(event);
+                handled = true;
                 break;
-            case 3:
-                handleMove(motionEvent);
-                handleCancel(motionEvent);
-                z = true;
+
+            case MotionEvent.ACTION_CANCEL:
+                if (DEBUG) Log.v(TAG, "*** CANCEL ***");
+                handleMove(event);
+                handleCancel(event);
+                handled = true;
                 break;
         }
         invalidate();
-        if (z) {
-            return true;
+        return handled ? true : super.onTouchEvent(event);
+    }
+
+    private void updateGlowPosition(float x, float y) {
+        float dx = x - mOuterRing.getX();
+        float dy = y - mOuterRing.getY();
+        dx *= 1f / mRingScaleFactor;
+        dy *= 1f / mRingScaleFactor;
+        mPointCloud.glowManager.setX(mOuterRing.getX() + dx);
+        mPointCloud.glowManager.setY(mOuterRing.getY() + dy);
+    }
+
+    private void handleDown(MotionEvent event) {
+        int actionIndex = event.getActionIndex();
+        float eventX = event.getX(actionIndex);
+        float eventY = event.getY(actionIndex);
+        switchToState(STATE_START, eventX, eventY);
+        if (!trySwitchToFirstTouchState(eventX, eventY)) {
+            mDragging = false;
+        } else {
+            mPointerId = event.getPointerId(actionIndex);
+            updateGlowPosition(eventX, eventY);
         }
-        return super.onTouchEvent(motionEvent);
     }
 
-    private void updateGlowPosition(float f, float f2) {
-        float y = (f2 - this.mOuterRing.getY()) * (1.0f / this.mRingScaleFactor);
-        this.mPointCloud.glowManager.setX(((f - this.mOuterRing.getX()) * (1.0f / this.mRingScaleFactor)) + this.mOuterRing.getX());
-        this.mPointCloud.glowManager.setY(y + this.mOuterRing.getY());
+    private void handleUp(MotionEvent event) {
+        if (DEBUG && mDragging) Log.v(TAG, "** Handle RELEASE");
+        int actionIndex = event.getActionIndex();
+        if (event.getPointerId(actionIndex) == mPointerId) {
+            switchToState(STATE_FINISH, event.getX(actionIndex), event.getY(actionIndex));
+        }
     }
 
-    private void handleDown(MotionEvent motionEvent) {
-        int actionIndex = motionEvent.getActionIndex();
-        float x = motionEvent.getX(actionIndex);
-        float y = motionEvent.getY(actionIndex);
-        switchToState(1, x, y);
-        if (trySwitchToFirstTouchState(x, y)) {
-            this.mPointerId = motionEvent.getPointerId(actionIndex);
-            updateGlowPosition(x, y);
+    private void handleCancel(MotionEvent event) {
+        if (DEBUG && mDragging) Log.v(TAG, "** Handle CANCEL");
+
+        // We should drop the active target here but it interferes with
+        // moving off the screen in the direction of the navigation bar. At some point we may
+        // want to revisit how we handle this. For now we'll allow a canceled event to
+        // activate the current target.
+
+        // mActiveTarget = -1; // Drop the active target if canceled.
+
+        int actionIndex = event.findPointerIndex(mPointerId);
+        actionIndex = actionIndex == -1 ? 0 : actionIndex;
+        switchToState(STATE_FINISH, event.getX(actionIndex), event.getY(actionIndex));
+    }
+
+    private void handleMove(MotionEvent event) {
+        int activeTarget = -1;
+        final int historySize = event.getHistorySize();
+        ArrayList<TargetDrawable> targets = mTargetDrawables;
+        int ntargets = targets.size();
+        float x = 0.0f;
+        float y = 0.0f;
+        int actionIndex = event.findPointerIndex(mPointerId);
+
+        if (actionIndex == -1) {
+            return;  // no data for this pointer
+        }
+
+        for (int k = 0; k < historySize + 1; k++) {
+            float eventX = k < historySize ? event.getHistoricalX(actionIndex, k)
+                    : event.getX(actionIndex);
+            float eventY = k < historySize ? event.getHistoricalY(actionIndex, k)
+                    :event.getY(actionIndex);
+            // tx and ty are relative to wave center
+            float tx = eventX - mWaveCenterX;
+            float ty = eventY - mWaveCenterY;
+            float touchRadius = (float) Math.hypot(tx, ty);
+            final float scale = touchRadius > mOuterRadius ? mOuterRadius / touchRadius : 1.0f;
+            float limitX = tx * scale;
+            float limitY = ty * scale;
+            double angleRad = Math.atan2(-ty, tx);
+
+            if (!mDragging) {
+                trySwitchToFirstTouchState(eventX, eventY);
+            }
+
+            if (mDragging) {
+                // For multiple targets, snap to the one that matches
+                final float snapRadius = mRingScaleFactor * mOuterRadius - mSnapMargin;
+                final float snapDistance2 = snapRadius * snapRadius;
+                // Find first target in range
+                for (int i = 0; i < ntargets; i++) {
+                    TargetDrawable target = targets.get(i);
+
+                    double targetMinRad = (i - 0.5) * 2 * Math.PI / ntargets;
+                    double targetMaxRad = (i + 0.5) * 2 * Math.PI / ntargets;
+                    if (target.isEnabled()) {
+                        boolean angleMatches =
+                            (angleRad > targetMinRad && angleRad <= targetMaxRad) ||
+                            (angleRad + 2 * Math.PI > targetMinRad &&
+                             angleRad + 2 * Math.PI <= targetMaxRad);
+                        if (angleMatches && (dist2(tx, ty) > snapDistance2)) {
+                            activeTarget = i;
+                        }
+                    }
+                }
+            }
+            x = limitX;
+            y = limitY;
+        }
+
+        if (!mDragging) {
             return;
         }
-        this.mDragging = false;
-    }
 
-    private void handleUp(MotionEvent motionEvent) {
-        int actionIndex = motionEvent.getActionIndex();
-        if (motionEvent.getPointerId(actionIndex) == this.mPointerId) {
-            switchToState(5, motionEvent.getX(actionIndex), motionEvent.getY(actionIndex));
+        if (activeTarget != -1) {
+            switchToState(STATE_SNAP, x,y);
+            updateGlowPosition(x, y);
+        } else {
+            switchToState(STATE_TRACKING, x, y);
+            updateGlowPosition(x, y);
         }
-    }
 
-    private void handleCancel(MotionEvent motionEvent) {
-        int findPointerIndex = motionEvent.findPointerIndex(this.mPointerId);
-        if (findPointerIndex == -1) {
-            findPointerIndex = 0;
-        }
-        switchToState(5, motionEvent.getX(findPointerIndex), motionEvent.getY(findPointerIndex));
-    }
-
-    @TargetApi(16)
-    private void handleMove(MotionEvent motionEvent) {
-        int historySize = motionEvent.getHistorySize();
-        ArrayList arrayList = this.mTargetDrawables;
-        int size = arrayList.size();
-        int findPointerIndex = motionEvent.findPointerIndex(this.mPointerId);
-        if (findPointerIndex != -1) {
-            int i = 0;
-            float f = 0.0f;
-            float f2 = 0.0f;
-            int i2 = -1;
-            while (i < historySize + 1) {
-                float historicalX;
-                if (i < historySize) {
-                    historicalX = motionEvent.getHistoricalX(findPointerIndex, i);
-                } else {
-                    historicalX = motionEvent.getX(findPointerIndex);
-                }
-                if (i < historySize) {
-                    f = motionEvent.getHistoricalY(findPointerIndex, i);
-                } else {
-                    f = motionEvent.getY(findPointerIndex);
-                }
-                float f3 = historicalX - this.mWaveCenterX;
-                float f4 = f - this.mWaveCenterY;
-                f2 = (float) Math.sqrt((double) dist2(f3, f4));
-                f2 = f2 > this.mOuterRadius ? this.mOuterRadius / f2 : 1.0f;
-                float f5 = f3 * f2;
-                float f6 = f4 * f2;
-                double atan2 = Math.atan2((double) (-f4), (double) f3);
-                if (!this.mDragging) {
-                    trySwitchToFirstTouchState(historicalX, f);
-                }
-                if (this.mDragging) {
-                    f = (this.mRingScaleFactor * this.mOuterRadius) - this.mSnapMargin;
-                    historicalX = f * f;
-                    int i3 = 0;
-                    while (i3 < size) {
-                        int i4;
-                        double d = (((((double) i3) - 0.5d) * 2.0d) * 3.141592653589793d) / ((double) size);
-                        double d2 = (((((double) i3) + 0.5d) * 2.0d) * 3.141592653589793d) / ((double) size);
-                        if (((TargetDrawable) arrayList.get(i3)).isEnabled()) {
-                            Object obj = ((atan2 <= d || atan2 > d2) && (6.283185307179586d + atan2 <= d || 6.283185307179586d + atan2 > d2)) ? null : 1;
-                            if (obj != null && dist2(f3, f4) > historicalX) {
-                                i4 = i3;
-                                i3++;
-                                i2 = i4;
-                            }
-                        }
-                        i4 = i2;
-                        i3++;
-                        i2 = i4;
-                    }
-                }
-                i++;
-                f2 = f5;
-                f = f6;
+        if (mActiveTarget != activeTarget) {
+            // Defocus the old target
+            if (mActiveTarget != -1) {
+                TargetDrawable target = targets.get(mActiveTarget);
+                target.setState(TargetDrawable.STATE_INACTIVE);
             }
-            if (this.mDragging) {
-                if (i2 != -1) {
-                    switchToState(4, f2, f);
-                    updateGlowPosition(f2, f);
-                } else {
-                    switchToState(3, f2, f);
-                    updateGlowPosition(f2, f);
+            // Focus the new target
+            if (activeTarget != -1) {
+                TargetDrawable target = targets.get(activeTarget);
+                target.setState(TargetDrawable.STATE_FOCUSED);
+                final AccessibilityManager accessibilityManager =
+                        (AccessibilityManager) getContext().getSystemService(
+                                Context.ACCESSIBILITY_SERVICE);
+                if (accessibilityManager.isEnabled()) {
+                    String targetContentDescription = getTargetDescription(activeTarget);
+                    announceForAccessibility(targetContentDescription);
                 }
-                if (this.mActiveTarget != i2) {
-                    if (this.mActiveTarget != -1) {
-                        ((TargetDrawable) arrayList.get(this.mActiveTarget)).setState(TargetDrawable.STATE_INACTIVE);
-                    }
-                    if (i2 != -1) {
-                        ((TargetDrawable) arrayList.get(i2)).setState(TargetDrawable.STATE_FOCUSED);
-                        if (((AccessibilityManager) getContext().getSystemService("accessibility")).isEnabled()) {
-                            CharSequence targetDescription = getTargetDescription(i2);
-                            if (VERSION.SDK_INT >= 16) {
-                                announceForAccessibility(targetDescription);
-                            }
-                        }
-                    }
-                }
-                this.mActiveTarget = i2;
             }
         }
+        mActiveTarget = activeTarget;
     }
 
-    @TargetApi(14)
-    public boolean onHoverEvent(MotionEvent motionEvent) {
-        if (((AccessibilityManager) getContext().getSystemService("accessibility")).isTouchExplorationEnabled()) {
-            int action = motionEvent.getAction();
+    @Override
+    public boolean onHoverEvent(MotionEvent event) {
+        final AccessibilityManager accessibilityManager =
+                (AccessibilityManager) getContext().getSystemService(
+                        Context.ACCESSIBILITY_SERVICE);
+        if (accessibilityManager.isTouchExplorationEnabled()) {
+            final int action = event.getAction();
             switch (action) {
-                case 7:
-                    motionEvent.setAction(2);
+                case MotionEvent.ACTION_HOVER_ENTER:
+                    event.setAction(MotionEvent.ACTION_DOWN);
                     break;
-                case 9:
-                    motionEvent.setAction(0);
+                case MotionEvent.ACTION_HOVER_MOVE:
+                    event.setAction(MotionEvent.ACTION_MOVE);
                     break;
-                case 10:
-                    motionEvent.setAction(1);
+                case MotionEvent.ACTION_HOVER_EXIT:
+                    event.setAction(MotionEvent.ACTION_UP);
                     break;
             }
-            onTouchEvent(motionEvent);
-            motionEvent.setAction(action);
+            onTouchEvent(event);
+            event.setAction(action);
         }
-        super.onHoverEvent(motionEvent);
+        super.onHoverEvent(event);
         return true;
     }
 
-    private void setGrabbedState(int i) {
-        if (i != this.mGrabbedState) {
-            if (i != 0) {
+    /**
+     * Sets the current grabbed state, and dispatches a grabbed state change
+     * event to our listener.
+     */
+    private void setGrabbedState(int newState) {
+        if (newState != mGrabbedState) {
+            if (newState != OnTriggerListener.NO_HANDLE) {
                 vibrate();
             }
-            this.mGrabbedState = i;
-            if (this.mOnTriggerListener != null) {
-                if (i == 0) {
-                    this.mOnTriggerListener.onReleased(this, 1);
+            mGrabbedState = newState;
+            if (mOnTriggerListener != null) {
+                if (newState == OnTriggerListener.NO_HANDLE) {
+                    mOnTriggerListener.onReleased(this, OnTriggerListener.CENTER_HANDLE);
                 } else {
-                    this.mOnTriggerListener.onGrabbed(this, 1);
+                    mOnTriggerListener.onGrabbed(this, OnTriggerListener.CENTER_HANDLE);
                 }
-                this.mOnTriggerListener.onGrabbedStateChange(this, i);
+                mOnTriggerListener.onGrabbedStateChange(this, newState);
             }
         }
     }
 
-    private boolean trySwitchToFirstTouchState(float f, float f2) {
-        float f3 = f - this.mWaveCenterX;
-        float f4 = f2 - this.mWaveCenterY;
-        if (!this.mAlwaysTrackFinger && dist2(f3, f4) > getScaledGlowRadiusSquared()) {
-            return false;
+    private boolean trySwitchToFirstTouchState(float x, float y) {
+        final float tx = x - mWaveCenterX;
+        final float ty = y - mWaveCenterY;
+        if (mAlwaysTrackFinger || dist2(tx,ty) <= getScaledGlowRadiusSquared()) {
+            if (DEBUG) Log.v(TAG, "** Handle HIT");
+            switchToState(STATE_FIRST_TOUCH, x, y);
+            updateGlowPosition(tx, ty);
+            mDragging = true;
+            return true;
         }
-        switchToState(2, f, f2);
-        updateGlowPosition(f3, f4);
-        this.mDragging = true;
-        return true;
+        return false;
     }
 
     private void assignDefaultsIfNeeded() {
-        if (this.mOuterRadius == 0.0f) {
-            this.mOuterRadius = ((float) Math.max(this.mOuterRing.getWidth(), this.mOuterRing.getHeight())) / 2.0f;
+        if (mOuterRadius == 0.0f) {
+            mOuterRadius = Math.max(mOuterRing.getWidth(), mOuterRing.getHeight())/2.0f;
         }
-        if (this.mSnapMargin == 0.0f) {
-            this.mSnapMargin = TypedValue.applyDimension(1, SNAP_MARGIN_DEFAULT, getContext().getResources().getDisplayMetrics());
+        if (mSnapMargin == 0.0f) {
+            mSnapMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    SNAP_MARGIN_DEFAULT, getContext().getResources().getDisplayMetrics());
         }
-        if (this.mInnerRadius == 0.0f) {
-            this.mInnerRadius = ((float) this.mHandleDrawable.getWidth()) / 10.0f;
-        }
-    }
-
-    private void computeInsets(int i, int i2) {
-        int a = e.a(this.mGravity, ad.e(this));
-        switch (a & 7) {
-            case 3:
-                this.mHorizontalInset = 0;
-                break;
-            case 5:
-                this.mHorizontalInset = i;
-                break;
-            default:
-                this.mHorizontalInset = i / 2;
-                break;
-        }
-        switch (a & 112) {
-            case 48:
-                this.mVerticalInset = 0;
-                return;
-            case 80:
-                this.mVerticalInset = i2;
-                return;
-            default:
-                this.mVerticalInset = i2 / 2;
-                return;
+        if (mInnerRadius == 0.0f) {
+            mInnerRadius = mHandleDrawable.getWidth() / 10.0f;
         }
     }
 
-    private float computeScaleFactor(int i, int i2, int i3, int i4) {
-        float f = 1.0f;
-        if (!this.mAllowScaling) {
-            return 1.0f;
-        }
-        float f2;
-        int a = e.a(this.mGravity, ad.e(this));
-        switch (a & 7) {
-            case 3:
-            case 5:
-                f2 = 1.0f;
+    private void computeInsets(int dx, int dy) {
+        final int layoutDirection = getLayoutDirection();
+        final int absoluteGravity = Gravity.getAbsoluteGravity(mGravity, layoutDirection);
+
+        switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+                mHorizontalInset = 0;
                 break;
+            case Gravity.RIGHT:
+                mHorizontalInset = dx;
+                break;
+            case Gravity.CENTER_HORIZONTAL:
             default:
-                if (i <= i3) {
-                    f2 = 1.0f;
-                    break;
-                }
-                f2 = ((((float) i3) * 1.0f) - ((float) this.mMaxTargetWidth)) / ((float) (i - this.mMaxTargetWidth));
+                mHorizontalInset = dx / 2;
                 break;
         }
-        switch (a & 112) {
-            case 48:
-            case 80:
+        switch (absoluteGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+                mVerticalInset = 0;
                 break;
+            case Gravity.BOTTOM:
+                mVerticalInset = dy;
+                break;
+            case Gravity.CENTER_VERTICAL:
             default:
-                if (i2 > i4) {
-                    f = ((1.0f * ((float) i4)) - ((float) this.mMaxTargetHeight)) / ((float) (i2 - this.mMaxTargetHeight));
-                    break;
+                mVerticalInset = dy / 2;
+                break;
+        }
+    }
+
+    /**
+     * Given the desired width and height of the ring and the allocated width and height, compute
+     * how much we need to scale the ring.
+     */
+    private float computeScaleFactor(int desiredWidth, int desiredHeight,
+            int actualWidth, int actualHeight) {
+
+        // Return unity if scaling is not allowed.
+        if (!mAllowScaling) return 1f;
+
+        final int layoutDirection = getLayoutDirection();
+        final int absoluteGravity = Gravity.getAbsoluteGravity(mGravity, layoutDirection);
+
+        float scaleX = 1f;
+        float scaleY = 1f;
+
+        // We use the gravity as a cue for whether we want to scale on a particular axis.
+        // We only scale to fit horizontally if we're not pinned to the left or right. Likewise,
+        // we only scale to fit vertically if we're not pinned to the top or bottom. In these
+        // cases, we want the ring to hang off the side or top/bottom, respectively.
+        switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+            case Gravity.RIGHT:
+                break;
+            case Gravity.CENTER_HORIZONTAL:
+            default:
+                if (desiredWidth > actualWidth) {
+                    scaleX = (1f * actualWidth - mMaxTargetWidth) /
+                            (desiredWidth - mMaxTargetWidth);
                 }
                 break;
         }
-        return Math.min(f2, f);
+        switch (absoluteGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+            case Gravity.BOTTOM:
+                break;
+            case Gravity.CENTER_VERTICAL:
+            default:
+                if (desiredHeight > actualHeight) {
+                    scaleY = (1f * actualHeight - mMaxTargetHeight) /
+                            (desiredHeight - mMaxTargetHeight);
+                }
+                break;
+        }
+        return Math.min(scaleX, scaleY);
     }
 
     private float getRingWidth() {
-        return this.mRingScaleFactor * Math.max((float) this.mOuterRing.getWidth(), 2.0f * this.mOuterRadius);
+        return mRingScaleFactor * Math.max(mOuterRing.getWidth(), 2 * mOuterRadius);
     }
 
     private float getRingHeight() {
-        return this.mRingScaleFactor * Math.max((float) this.mOuterRing.getHeight(), 2.0f * this.mOuterRadius);
+        return mRingScaleFactor * Math.max(mOuterRing.getHeight(), 2 * mOuterRadius);
     }
 
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        super.onLayout(z, i, i2, i3, i4);
-        int i5 = i3 - i;
-        i5 = i4 - i2;
-        float ringWidth = getRingWidth();
-        ringWidth = ((ringWidth + ((float) this.mMaxTargetWidth)) / 2.0f) + ((float) this.mHorizontalInset);
-        float f = (float) this.mVerticalInset;
-        float ringHeight = ((getRingHeight() + ((float) this.mMaxTargetHeight)) / 2.0f) + f;
-        if (this.mInitialLayout) {
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        final int width = right - left;
+        final int height = bottom - top;
+
+        // Target placement width/height. This puts the targets on the greater of the ring
+        // width or the specified outer radius.
+        final float placementWidth = getRingWidth();
+        final float placementHeight = getRingHeight();
+        float newWaveCenterX = mHorizontalInset
+                + (mMaxTargetWidth + placementWidth) / 2;
+        float newWaveCenterY = mVerticalInset
+                + (mMaxTargetHeight + placementHeight) / 2;
+
+        if (mInitialLayout) {
             stopAndHideWaveAnimation();
             hideTargets(false, false);
-            this.mInitialLayout = false;
+            mInitialLayout = false;
         }
-        this.mOuterRing.setPositionX(ringWidth);
-        this.mOuterRing.setPositionY(ringHeight);
-        this.mPointCloud.setScale(this.mRingScaleFactor);
-        this.mHandleDrawable.setPositionX(ringWidth);
-        this.mHandleDrawable.setPositionY(ringHeight);
-        updateTargetPositions(ringWidth, ringHeight);
-        updatePointCloudPosition(ringWidth, ringHeight);
-        updateGlowPosition(ringWidth, ringHeight);
-        this.mWaveCenterX = ringWidth;
-        this.mWaveCenterY = ringHeight;
+
+        mOuterRing.setPositionX(newWaveCenterX);
+        mOuterRing.setPositionY(newWaveCenterY);
+
+        mPointCloud.setScale(mRingScaleFactor);
+
+        mHandleDrawable.setPositionX(newWaveCenterX);
+        mHandleDrawable.setPositionY(newWaveCenterY);
+
+        updateTargetPositions(newWaveCenterX, newWaveCenterY);
+        updatePointCloudPosition(newWaveCenterX, newWaveCenterY);
+        updateGlowPosition(newWaveCenterX, newWaveCenterY);
+
+        mWaveCenterX = newWaveCenterX;
+        mWaveCenterY = newWaveCenterY;
+
+        if (DEBUG) dump();
     }
 
-    private void updateTargetPositions(float f, float f2) {
-        ArrayList arrayList = this.mTargetDrawables;
-        int size = arrayList.size();
-        float f3 = (float) (-6.283185307179586d / ((double) size));
+    private void updateTargetPositions(float centerX, float centerY) {
+        // Reposition the target drawables if the view changed.
+        ArrayList<TargetDrawable> targets = mTargetDrawables;
+        final int size = targets.size();
+        final float alpha = (float) (-2.0f * Math.PI / size);
         for (int i = 0; i < size; i++) {
-            TargetDrawable targetDrawable = (TargetDrawable) arrayList.get(i);
-            float f4 = ((float) i) * f3;
-            targetDrawable.setPositionX(f);
-            targetDrawable.setPositionY(f2);
-            targetDrawable.setX((getRingWidth() / 2.0f) * ((float) Math.cos((double) f4)));
-            targetDrawable.setY(((float) Math.sin((double) f4)) * (getRingHeight() / 2.0f));
+            final TargetDrawable targetIcon = targets.get(i);
+            final float angle = alpha * i;
+            targetIcon.setPositionX(centerX);
+            targetIcon.setPositionY(centerY);
+            targetIcon.setX(getRingWidth() / 2 * (float) Math.cos(angle));
+            targetIcon.setY(getRingHeight() / 2 * (float) Math.sin(angle));
         }
     }
 
-    private void updatePointCloudPosition(float f, float f2) {
-        this.mPointCloud.setCenter(f, f2);
+    private void updatePointCloudPosition(float centerX, float centerY) {
+        mPointCloud.setCenter(centerX, centerY);
     }
 
+    @Override
     protected void onDraw(Canvas canvas) {
-        this.mPointCloud.draw(canvas);
-        this.mOuterRing.draw(canvas);
-        int size = this.mTargetDrawables.size();
-        for (int i = 0; i < size; i++) {
-            TargetDrawable targetDrawable = (TargetDrawable) this.mTargetDrawables.get(i);
-            if (targetDrawable != null) {
-                targetDrawable.draw(canvas);
+        mPointCloud.draw(canvas);
+        mOuterRing.draw(canvas);
+        final int ntargets = mTargetDrawables.size();
+        for (int i = 0; i < ntargets; i++) {
+            TargetDrawable target = mTargetDrawables.get(i);
+            if (target != null) {
+                target.draw(canvas);
             }
         }
-        this.mHandleDrawable.draw(canvas);
+        mHandleDrawable.draw(canvas);
     }
 
-    public void setOnTriggerListener(OnTriggerListener onTriggerListener) {
-        this.mOnTriggerListener = onTriggerListener;
+    public void setOnTriggerListener(OnTriggerListener listener) {
+        mOnTriggerListener = listener;
     }
 
-    private float square(float f) {
-        return f * f;
+    private float square(float d) {
+        return d * d;
     }
 
-    private float dist2(float f, float f2) {
-        return (f * f) + (f2 * f2);
+    private float dist2(float dx, float dy) {
+        return dx*dx + dy*dy;
     }
 
     private float getScaledGlowRadiusSquared() {
-        float f;
-        if (((AccessibilityManager) getContext().getSystemService("accessibility")).isEnabled()) {
-            f = TAP_RADIUS_SCALE_ACCESSIBILITY_ENABLED * this.mGlowRadius;
+        final float scaledTapRadius;
+        final AccessibilityManager accessibilityManager =
+                (AccessibilityManager) getContext().getSystemService(
+                        Context.ACCESSIBILITY_SERVICE);
+        if (accessibilityManager.isEnabled()) {
+            scaledTapRadius = TAP_RADIUS_SCALE_ACCESSIBILITY_ENABLED * mGlowRadius;
         } else {
-            f = this.mGlowRadius;
+            scaledTapRadius = mGlowRadius;
         }
-        return square(f);
+        return square(scaledTapRadius);
     }
 
-    @TargetApi(16)
     private void announceTargets() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int size = this.mTargetDrawables.size();
-        for (int i = 0; i < size; i++) {
-            CharSequence targetDescription = getTargetDescription(i);
-            Object directionDescription = getDirectionDescription(i);
-            if (!(TextUtils.isEmpty(targetDescription) || TextUtils.isEmpty(directionDescription))) {
-                stringBuilder.append(String.format(directionDescription, new Object[]{targetDescription}));
+        StringBuilder utterance = new StringBuilder();
+        final int targetCount = mTargetDrawables.size();
+        for (int i = 0; i < targetCount; i++) {
+            String targetDescription = getTargetDescription(i);
+            String directionDescription = getDirectionDescription(i);
+            if (!TextUtils.isEmpty(targetDescription)
+                    && !TextUtils.isEmpty(directionDescription)) {
+                String text = String.format(directionDescription, targetDescription);
+                utterance.append(text);
             }
         }
-        if (stringBuilder.length() > 0 && VERSION.SDK_INT >= 16) {
-            announceForAccessibility(stringBuilder.toString());
+        if (utterance.length() > 0) {
+            announceForAccessibility(utterance.toString());
         }
     }
 
-    private String getTargetDescription(int i) {
-        if (this.mTargetDescriptions == null || this.mTargetDescriptions.isEmpty()) {
-            this.mTargetDescriptions = loadDescriptions(this.mTargetDescriptionsResourceId);
-            if (this.mTargetDrawables.size() != this.mTargetDescriptions.size()) {
-                Log.w(TAG, "The number of target drawables must be equal to the number of target descriptions.");
+    private String getTargetDescription(int index) {
+        if (mTargetDescriptions == null || mTargetDescriptions.isEmpty()) {
+            mTargetDescriptions = loadDescriptions(mTargetDescriptionsResourceId);
+            if (mTargetDrawables.size() != mTargetDescriptions.size()) {
+                Log.w(TAG, "The number of target drawables must be"
+                        + " equal to the number of target descriptions.");
                 return null;
             }
         }
-        return (String) this.mTargetDescriptions.get(i);
+        return mTargetDescriptions.get(index);
     }
 
-    private String getDirectionDescription(int i) {
-        if (this.mDirectionDescriptions == null || this.mDirectionDescriptions.isEmpty()) {
-            this.mDirectionDescriptions = loadDescriptions(this.mDirectionDescriptionsResourceId);
-            if (this.mTargetDrawables.size() != this.mDirectionDescriptions.size()) {
-                Log.w(TAG, "The number of target drawables must be equal to the number of direction descriptions.");
+    private String getDirectionDescription(int index) {
+        if (mDirectionDescriptions == null || mDirectionDescriptions.isEmpty()) {
+            mDirectionDescriptions = loadDescriptions(mDirectionDescriptionsResourceId);
+            if (mTargetDrawables.size() != mDirectionDescriptions.size()) {
+                Log.w(TAG, "The number of target drawables must be"
+                        + " equal to the number of direction descriptions.");
                 return null;
             }
         }
-        return (String) this.mDirectionDescriptions.get(i);
+        return mDirectionDescriptions.get(index);
     }
 
-    private ArrayList<String> loadDescriptions(int i) {
-        TypedArray obtainTypedArray = getContext().getResources().obtainTypedArray(i);
-        int length = obtainTypedArray.length();
-        ArrayList<String> arrayList = new ArrayList(length);
-        for (int i2 = 0; i2 < length; i2++) {
-            arrayList.add(obtainTypedArray.getString(i2));
+    private ArrayList<String> loadDescriptions(int resourceId) {
+        TypedArray array = getContext().getResources().obtainTypedArray(resourceId);
+        final int count = array.length();
+        ArrayList<String> targetContentDescriptions = new ArrayList<String>(count);
+        for (int i = 0; i < count; i++) {
+            String contentDescription = array.getString(i);
+            targetContentDescriptions.add(contentDescription);
         }
-        obtainTypedArray.recycle();
-        return arrayList;
+        array.recycle();
+        return targetContentDescriptions;
     }
 
-    public int getResourceIdForTarget(int i) {
-        TargetDrawable targetDrawable = (TargetDrawable) this.mTargetDrawables.get(i);
-        return targetDrawable == null ? 0 : targetDrawable.getResourceId();
+    public int getResourceIdForTarget(int index) {
+        final TargetDrawable drawable = mTargetDrawables.get(index);
+        return drawable == null ? 0 : drawable.getResourceId();
     }
 
-    public void setEnableTarget(int i, boolean z) {
-        for (int i2 = 0; i2 < this.mTargetDrawables.size(); i2++) {
-            TargetDrawable targetDrawable = (TargetDrawable) this.mTargetDrawables.get(i2);
-            if (targetDrawable.getResourceId() == i) {
-                targetDrawable.setEnabled(z);
-                return;
+    public void setEnableTarget(int resourceId, boolean enabled) {
+        for (int i = 0; i < mTargetDrawables.size(); i++) {
+            final TargetDrawable target = mTargetDrawables.get(i);
+            if (target.getResourceId() == resourceId) {
+                target.setEnabled(enabled);
+                break; // should never be more than one match
             }
         }
     }
 
-    public int getTargetPosition(int i) {
-        for (int i2 = 0; i2 < this.mTargetDrawables.size(); i2++) {
-            if (((TargetDrawable) this.mTargetDrawables.get(i2)).getResourceId() == i) {
-                return i2;
+    /**
+     * Gets the position of a target in the array that matches the given resource.
+     * @param resourceId
+     * @return the index or -1 if not found
+     */
+    public int getTargetPosition(int resourceId) {
+        for (int i = 0; i < mTargetDrawables.size(); i++) {
+            final TargetDrawable target = mTargetDrawables.get(i);
+            if (target.getResourceId() == resourceId) {
+                return i; // should never be more than one match
             }
         }
         return -1;
     }
 
-    private boolean replaceTargetDrawables(Resources resources, int i, int i2) {
-        boolean z = false;
-        if (!(i == 0 || i2 == 0)) {
-            ArrayList arrayList = this.mTargetDrawables;
-            int size = arrayList.size();
-            int i3 = 0;
-            while (i3 < size) {
-                boolean z2;
-                TargetDrawable targetDrawable = (TargetDrawable) arrayList.get(i3);
-                if (targetDrawable == null || targetDrawable.getResourceId() != i) {
-                    z2 = z;
-                } else {
-                    targetDrawable.setDrawable(resources, i2);
-                    z2 = true;
-                }
-                i3++;
-                z = z2;
-            }
-            if (z) {
-                requestLayout();
+    private boolean replaceTargetDrawables(Resources res, int existingResourceId,
+            int newResourceId) {
+        if (existingResourceId == 0 || newResourceId == 0) {
+            return false;
+        }
+
+        boolean result = false;
+        final ArrayList<TargetDrawable> drawables = mTargetDrawables;
+        final int size = drawables.size();
+        for (int i = 0; i < size; i++) {
+            final TargetDrawable target = drawables.get(i);
+            if (target != null && target.getResourceId() == existingResourceId) {
+                target.setDrawable(res, newResourceId);
+                result = true;
             }
         }
-        return z;
+
+        if (result) {
+            requestLayout(); // in case any given drawable's size changes
+        }
+
+        return result;
     }
 
-    public boolean replaceTargetDrawablesIfPresent(ComponentName componentName, String str, int i) {
-        boolean z = false;
-        if (i != 0) {
-            if (componentName != null) {
-                try {
-                    PackageManager packageManager = getContext().getPackageManager();
-                    Bundle bundle = packageManager.getActivityInfo(componentName, NotificationCompat.FLAG_HIGH_PRIORITY).metaData;
-                    if (bundle != null) {
-                        int i2 = bundle.getInt(str);
-                        if (i2 != 0) {
-                            z = replaceTargetDrawables(packageManager.getResourcesForActivity(componentName), i, i2);
-                        }
+    /**
+     * Searches the given package for a resource to use to replace the Drawable on the
+     * target with the given resource id
+     * @param component of the .apk that contains the resource
+     * @param name of the metadata in the .apk
+     * @param existingResId the resource id of the target to search for
+     * @return true if found in the given package and replaced at least one target Drawables
+     */
+    public boolean replaceTargetDrawablesIfPresent(ComponentName component, String name,
+                int existingResId) {
+        if (existingResId == 0) return false;
+
+        boolean replaced = false;
+        if (component != null) {
+            try {
+                PackageManager packageManager = getContext().getPackageManager();
+                // Look for the search icon specified in the activity meta-data
+                Bundle metaData = packageManager.getActivityInfo(
+                        component, PackageManager.GET_META_DATA).metaData;
+                if (metaData != null) {
+                    int iconResId = metaData.getInt(name);
+                    if (iconResId != 0) {
+                        Resources res = packageManager.getResourcesForActivity(component);
+                        replaced = replaceTargetDrawables(res, existingResId, iconResId);
                     }
-                } catch (Throwable e) {
-                    Log.w(TAG, "Failed to swap drawable; " + componentName.flattenToShortString() + " not found", e);
-                } catch (Throwable e2) {
-                    Log.w(TAG, "Failed to swap drawable from " + componentName.flattenToShortString(), e2);
                 }
-            }
-            if (!z) {
-                replaceTargetDrawables(getContext().getResources(), i, i);
+            } catch (NameNotFoundException e) {
+                Log.w(TAG, "Failed to swap drawable; "
+                        + component.flattenToShortString() + " not found", e);
+            } catch (Resources.NotFoundException nfe) {
+                Log.w(TAG, "Failed to swap drawable from "
+                        + component.flattenToShortString(), nfe);
             }
         }
-        return z;
+        if (!replaced) {
+            // Restore the original drawable
+            replaceTargetDrawables(getContext().getResources(), existingResId, existingResId);
+        }
+        return replaced;
+    }
+
+    public class GlowpadExploreByTouchHelper extends ExploreByTouchHelper {
+
+        private Rect mBounds = new Rect();
+
+        public GlowpadExploreByTouchHelper(View forView) {
+            super(forView);
+        }
+
+        @Override
+        protected int getVirtualViewAt(float x, float y) {
+            if (mGrabbedState == OnTriggerListener.CENTER_HANDLE) {
+                for (int i = 0; i < mTargetDrawables.size(); i++) {
+                    final TargetDrawable target = mTargetDrawables.get(i);
+                    if (target.isEnabled() && target.getBounds().contains((int) x, (int) y)) {
+                        return i;
+                    }
+                }
+                return INVALID_ID;
+            } else {
+                return HOST_ID;
+            }
+        }
+
+        @Override
+        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+            if (mGrabbedState == OnTriggerListener.CENTER_HANDLE) {
+                // Add virtual views backwards so that accessibility services like switch
+                // access traverse them in the correct order
+                for (int i = mTargetDrawables.size() - 1; i >= 0; i--) {
+                    if (mTargetDrawables.get(i).isEnabled()) {
+                        virtualViewIds.add(i);
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPopulateEventForVirtualView(int virtualViewId, AccessibilityEvent event) {
+            if (virtualViewId >= 0 && virtualViewId < mTargetDescriptions.size()) {
+                event.setContentDescription(mTargetDescriptions.get(virtualViewId));
+            }
+        }
+
+        @Override
+        public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+            if (host == GlowPadView.this && event.getEventType()
+                    == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+                event.setContentChangeTypes(AccessibilityEvent.CONTENT_CHANGE_TYPE_SUBTREE);
+            }
+            super.onInitializeAccessibilityEvent(host, event);
+        }
+
+        @Override
+        public void onPopulateNodeForHost(AccessibilityNodeInfoCompat node) {
+            if (mGrabbedState == OnTriggerListener.NO_HANDLE) {
+                node.setClickable(true);
+                node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
+            }
+            mBounds.set(0, 0, GlowPadView.this.getWidth(), GlowPadView.this.getHeight());
+            node.setBoundsInParent(mBounds);
+        }
+
+        @Override
+        public boolean performAccessibilityAction(View host, int action, Bundle args) {
+            if (mGrabbedState == OnTriggerListener.NO_HANDLE) {
+                // Simulate handle being grabbed to expose targets.
+                trySwitchToFirstTouchState(mWaveCenterX, mWaveCenterY);
+                invalidateRoot();
+                return true;
+            }
+            return super.performAccessibilityAction(host, action, args);
+        }
+
+        @Override
+        protected void onPopulateNodeForVirtualView(int virtualViewId,
+                AccessibilityNodeInfoCompat node) {
+            if (virtualViewId < mTargetDrawables.size()) {
+                final TargetDrawable target = mTargetDrawables.get(virtualViewId);
+                node.setBoundsInParent(target.getBounds());
+                node.setClickable(true);
+                node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
+                node.setContentDescription(getTargetDescription(virtualViewId));
+            }
+        }
+
+        @Override
+        protected boolean onPerformActionForVirtualView(int virtualViewId, int action,
+                Bundle arguments) {
+            if (action == AccessibilityNodeInfo.ACTION_CLICK) {
+                if (virtualViewId >= 0 && virtualViewId < mTargetDrawables.size()) {
+                    dispatchTriggerEvent(virtualViewId);
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }

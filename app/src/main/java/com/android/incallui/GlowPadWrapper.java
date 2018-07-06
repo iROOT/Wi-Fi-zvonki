@@ -1,129 +1,171 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License
+ */
+
 package com.android.incallui;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.telecom.VideoProfile;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import com.android.incallui.a.b;
+
 import com.android.incallui.widget.multiwaveview.GlowPadView;
-import com.android.incallui.widget.multiwaveview.GlowPadView.OnTriggerListener;
 
-public class GlowPadWrapper extends GlowPadView implements OnTriggerListener {
-    private static final String a = GlowPadWrapper.class.getSimpleName();
-    private final Handler b = new Handler(this) {
-        final /* synthetic */ GlowPadWrapper a;
+/**
+ *
+ */
+public class GlowPadWrapper extends GlowPadView implements GlowPadView.OnTriggerListener {
 
-        {
-            this.a = r1;
-        }
+    // Parameters for the GlowPadView "ping" animation; see triggerPing().
+    private static final int PING_MESSAGE_WHAT = 101;
+    private static final boolean ENABLE_PING_AUTO_REPEAT = true;
+    private static final long PING_REPEAT_DELAY_MS = 1200;
 
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case 101:
-                    this.a.d();
-                    return;
-                default:
-                    return;
+    private final Handler mPingHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case PING_MESSAGE_WHAT:
+                    triggerPing();
+                    break;
             }
         }
     };
-    private a c;
-    private boolean d = true;
-    private boolean e = false;
 
-    public interface a {
-        void a();
-
-        void b();
-
-        void c();
-
-        void d();
-    }
+    private AnswerListener mAnswerListener;
+    private boolean mPingEnabled = true;
+    private boolean mTargetTriggered = false;
+    private int mVideoState = VideoProfile.STATE_BIDIRECTIONAL;
 
     public GlowPadWrapper(Context context) {
         super(context);
-        Log.d(a, "class created " + this + " ");
+        Log.d(this, "class created " + this + " ");
     }
 
-    public GlowPadWrapper(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        Log.d(a, "class created " + this);
+    public GlowPadWrapper(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        Log.d(this, "class created " + this);
     }
 
+    @Override
     protected void onFinishInflate() {
-        Log.d(a, "onFinishInflate()");
+        Log.d(this, "onFinishInflate()");
         super.onFinishInflate();
         setOnTriggerListener(this);
     }
 
-    public void a() {
-        Log.d(a, "startPing");
-        this.d = true;
-        d();
+    public void startPing() {
+        Log.d(this, "startPing");
+        mPingEnabled = true;
+        triggerPing();
     }
 
-    public void b() {
-        Log.d(a, "stopPing");
-        this.d = false;
-        this.b.removeMessages(101);
+    public void stopPing() {
+        Log.d(this, "stopPing");
+        mPingEnabled = false;
+        mPingHandler.removeMessages(PING_MESSAGE_WHAT);
     }
 
-    private void d() {
-        Log.d(a, "triggerPing(): " + this.d + " " + this);
-        if (this.d && !this.b.hasMessages(101)) {
+    private void triggerPing() {
+        Log.d(this, "triggerPing(): " + mPingEnabled + " " + this);
+        if (mPingEnabled && !mPingHandler.hasMessages(PING_MESSAGE_WHAT)) {
             ping();
-            this.b.sendEmptyMessageDelayed(101, 1200);
+
+            if (ENABLE_PING_AUTO_REPEAT) {
+                mPingHandler.sendEmptyMessageDelayed(PING_MESSAGE_WHAT, PING_REPEAT_DELAY_MS);
+            }
         }
     }
 
-    public void onGrabbed(View view, int i) {
-        Log.d(a, "onGrabbed()");
-        b();
+    @Override
+    public void onGrabbed(View v, int handle) {
+        Log.d(this, "onGrabbed()");
+        stopPing();
     }
 
-    public void onReleased(View view, int i) {
-        Log.d(a, "onReleased()");
-        if (this.e) {
-            this.e = false;
+    @Override
+    public void onReleased(View v, int handle) {
+        Log.d(this, "onReleased()");
+        if (mTargetTriggered) {
+            mTargetTriggered = false;
         } else {
-            a();
+            startPing();
         }
     }
 
-    public void onTrigger(View view, int i) {
-        Log.d(a, "onTrigger()");
-        int resourceIdForTarget = getResourceIdForTarget(i);
-        if (resourceIdForTarget == b.ic_lockscreen_answer) {
-            this.c.a();
-            this.e = true;
-        } else if (resourceIdForTarget == b.ic_lockscreen_decline) {
-            this.c.b();
-            this.e = true;
-        } else if (resourceIdForTarget == b.ic_lockscreen_text) {
-            this.c.c();
-            this.e = true;
-        } else if (resourceIdForTarget == b.ic_lockscreen_action) {
-            this.c.d();
-            this.e = true;
-        } else {
-            Log.e(a, "Trigger detected on unhandled resource. Skipping.");
+    @Override
+    public void onTrigger(View v, int target) {
+        Log.d(this, "onTrigger() view=" + v + " target=" + target);
+        final int resId = getResourceIdForTarget(target);
+        switch (resId) {
+            case R.drawable.ic_lockscreen_answer:
+                mAnswerListener.onAnswer(VideoProfile.STATE_AUDIO_ONLY, getContext());
+                mTargetTriggered = true;
+                break;
+            case R.drawable.ic_lockscreen_decline:
+                mAnswerListener.onDecline(getContext());
+                mTargetTriggered = true;
+                break;
+            case R.drawable.ic_lockscreen_text:
+                mAnswerListener.onText();
+                mTargetTriggered = true;
+                break;
+            case R.drawable.ic_videocam:
+            case R.drawable.ic_lockscreen_answer_video:
+                mAnswerListener.onAnswer(mVideoState, getContext());
+                mTargetTriggered = true;
+                break;
+            case R.drawable.ic_lockscreen_decline_video:
+                mAnswerListener.onDeclineUpgradeRequest(getContext());
+                mTargetTriggered = true;
+                break;
+            default:
+                // Code should never reach here.
+                Log.e(this, "Trigger detected on unhandled resource. Skipping.");
         }
     }
 
-    public void onGrabbedStateChange(View view, int i) {
+    @Override
+    public void onGrabbedStateChange(View v, int handle) {
+
     }
 
+    @Override
     public void onFinishFinalAnimation() {
+
     }
 
-    public void setAnswerListener(a aVar) {
-        this.c = aVar;
+    public void setAnswerListener(AnswerListener listener) {
+        mAnswerListener = listener;
     }
 
-    public void c() {
-        super.setTargetResources(com.android.incallui.a.a.incoming_call_widget_3way_targets);
+    /**
+     * Sets the video state represented by the "video" icon on the glow pad.
+     *
+     * @param videoState The new video state.
+     */
+    public void setVideoState(int videoState) {
+        mVideoState = videoState;
+    }
+
+    public interface AnswerListener {
+        void onAnswer(int videoState, Context context);
+        void onDecline(Context context);
+        void onDeclineUpgradeRequest(Context context);
+        void onText();
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.incallui.widget.multiwaveview;
 
 import android.graphics.Canvas;
@@ -5,202 +21,215 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+
 import java.util.ArrayList;
 
 public class PointCloud {
-    private static final int INNER_POINTS = 8;
-    private static final float MAX_POINT_SIZE = 4.0f;
     private static final float MIN_POINT_SIZE = 2.0f;
-    private static final float PI = 3.1415927f;
+    private static final float MAX_POINT_SIZE = 4.0f;
+    private static final int INNER_POINTS = 8;
     private static final String TAG = "PointCloud";
-    GlowManager glowManager = new GlowManager();
+    private ArrayList<Point> mPointCloud = new ArrayList<Point>();
+    private Drawable mDrawable;
     private float mCenterX;
     private float mCenterY;
-    private Drawable mDrawable;
-    private float mOuterRadius;
-    private Paint mPaint = new Paint();
-    private ArrayList<Point> mPointCloud = new ArrayList();
+    private Paint mPaint;
     private float mScale = 1.0f;
+    private static final float PI = (float) Math.PI;
+
+    // These allow us to have multiple concurrent animations.
     WaveManager waveManager = new WaveManager();
+    GlowManager glowManager = new GlowManager();
+    private float mOuterRadius;
 
-    public class GlowManager {
+    public class WaveManager {
+        private float radius = 50;
+        private float width = 200.0f; // TODO: Make configurable
         private float alpha = 0.0f;
-        private float radius = 0.0f;
-        private float x;
-        private float y;
-
-        public void setX(float f) {
-            this.x = f;
-        }
-
-        public float getX() {
-            return this.x;
-        }
-
-        public void setY(float f) {
-            this.y = f;
-        }
-
-        public float getY() {
-            return this.y;
-        }
-
-        public void setAlpha(float f) {
-            this.alpha = f;
-        }
-
-        public float getAlpha() {
-            return this.alpha;
-        }
-
-        public void setRadius(float f) {
-            this.radius = f;
+        public void setRadius(float r) {
+            radius = r;
         }
 
         public float getRadius() {
-            return this.radius;
+            return radius;
+        }
+
+        public void setAlpha(float a) {
+            alpha = a;
+        }
+
+        public float getAlpha() {
+            return alpha;
+        }
+    };
+
+    public class GlowManager {
+        private float x;
+        private float y;
+        private float radius = 0.0f;
+        private float alpha = 0.0f;
+
+        public void setX(float x1) {
+            x = x1;
+        }
+
+        public float getX() {
+            return x;
+        }
+
+        public void setY(float y1) {
+            y = y1;
+        }
+
+        public float getY() {
+            return y;
+        }
+
+        public void setAlpha(float a) {
+            alpha = a;
+        }
+
+        public float getAlpha() {
+            return alpha;
+        }
+
+        public void setRadius(float r) {
+            radius = r;
+        }
+
+        public float getRadius() {
+            return radius;
         }
     }
 
     class Point {
-        float radius;
         float x;
         float y;
+        float radius;
 
-        public Point(float f, float f2, float f3) {
-            this.x = f;
-            this.y = f2;
-            this.radius = f3;
-        }
-    }
-
-    public class WaveManager {
-        private float alpha = 0.0f;
-        private float radius = 50.0f;
-        private float width = 200.0f;
-
-        public void setRadius(float f) {
-            this.radius = f;
-        }
-
-        public float getRadius() {
-            return this.radius;
-        }
-
-        public void setAlpha(float f) {
-            this.alpha = f;
-        }
-
-        public float getAlpha() {
-            return this.alpha;
+        public Point(float x2, float y2, float r) {
+            x = (float) x2;
+            y = (float) y2;
+            radius = r;
         }
     }
 
     public PointCloud(Drawable drawable) {
-        this.mPaint.setFilterBitmap(true);
-        this.mPaint.setColor(Color.rgb(255, 255, 255));
-        this.mPaint.setAntiAlias(true);
-        this.mPaint.setDither(true);
-        this.mDrawable = drawable;
-        if (this.mDrawable != null) {
+        mPaint = new Paint();
+        mPaint.setFilterBitmap(true);
+        mPaint.setColor(Color.rgb(255, 255, 255)); // TODO: make configurable
+        mPaint.setAntiAlias(true);
+        mPaint.setDither(true);
+
+        mDrawable = drawable;
+        if (mDrawable != null) {
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         }
     }
 
-    public void setCenter(float f, float f2) {
-        this.mCenterX = f;
-        this.mCenterY = f2;
+    public void setCenter(float x, float y) {
+        mCenterX = x;
+        mCenterY = y;
     }
 
-    public void makePointCloud(float f, float f2) {
-        if (f == 0.0f) {
+    public void makePointCloud(float innerRadius, float outerRadius) {
+        if (innerRadius == 0) {
             Log.w(TAG, "Must specify an inner radius");
             return;
         }
-        this.mOuterRadius = f2;
-        this.mPointCloud.clear();
-        float f3 = f2 - f;
-        float f4 = (6.2831855f * f) / 8.0f;
-        int round = Math.round(f3 / f4);
-        float f5 = f3 / ((float) round);
-        for (int i = 0; i <= round; i++) {
-            int i2 = (int) ((6.2831855f * f) / f4);
-            float f6 = 1.5707964f;
-            float f7 = 6.2831855f / ((float) i2);
-            for (int i3 = 0; i3 < i2; i3++) {
-                float cos = ((float) Math.cos((double) f6)) * f;
-                float sin = ((float) Math.sin((double) f6)) * f;
-                f6 += f7;
-                this.mPointCloud.add(new Point(cos, sin, f));
+        mOuterRadius = outerRadius;
+        mPointCloud.clear();
+        final float pointAreaRadius =  (outerRadius - innerRadius);
+        final float ds = (2.0f * PI * innerRadius / INNER_POINTS);
+        final int bands = (int) Math.round(pointAreaRadius / ds);
+        final float dr = pointAreaRadius / bands;
+        float r = innerRadius;
+        for (int b = 0; b <= bands; b++, r += dr) {
+            float circumference = 2.0f * PI * r;
+            final int pointsInBand = (int) (circumference / ds);
+            float eta = PI/2.0f;
+            float dEta = 2.0f * PI / pointsInBand;
+            for (int i = 0; i < pointsInBand; i++) {
+                float x = r * (float) Math.cos(eta);
+                float y = r * (float) Math.sin(eta);
+                eta += dEta;
+                mPointCloud.add(new Point(x, y, r));
             }
-            f += f5;
         }
     }
 
-    public void setScale(float f) {
-        this.mScale = f;
+    public void setScale(float scale) {
+        mScale  = scale;
     }
 
     public float getScale() {
-        return this.mScale;
+        return mScale;
     }
 
-    private static float hypot(float f, float f2) {
-        return (float) Math.sqrt((double) ((f * f) + (f2 * f2)));
+    private static float hypot(float x, float y) {
+        return (float) Math.hypot(x, y);
     }
 
-    private static float max(float f, float f2) {
-        return f > f2 ? f : f2;
+    private static float max(float a, float b) {
+        return a > b ? a : b;
     }
 
     public int getAlphaForPoint(Point point) {
-        float f = 0.0f;
-        float hypot = hypot(this.glowManager.x - point.x, this.glowManager.y - point.y);
-        if (hypot < this.glowManager.radius) {
-            hypot = (float) Math.cos((double) ((hypot * 0.7853982f) / this.glowManager.radius));
-            hypot = max(0.0f, (float) Math.pow((double) hypot, 10.0d)) * this.glowManager.alpha;
-        } else {
-            hypot = 0.0f;
+        // Contribution from positional glow
+        float glowDistance = hypot(glowManager.x - point.x, glowManager.y - point.y);
+        float glowAlpha = 0.0f;
+
+        if (glowDistance < glowManager.radius) {
+            double cos = Math.cos(Math.PI * 0.25d * glowDistance / glowManager.radius);
+            glowAlpha = glowManager.alpha * max(0.0f, (float) Math.pow(cos, 10.0d));
         }
-        float hypot2 = hypot(point.x, point.y) - this.waveManager.radius;
-        if (hypot2 < this.waveManager.width * 0.5f && hypot2 < 0.0f) {
-            hypot2 = (float) Math.cos((double) ((hypot2 * 0.7853982f) / this.waveManager.width));
-            f = max(0.0f, (float) Math.pow((double) hypot2, 20.0d)) * this.waveManager.alpha;
+
+        // Compute contribution from Wave
+        float radius = hypot(point.x, point.y);
+        float distanceToWaveRing = (radius - waveManager.radius);
+        float waveAlpha = 0.0f;
+        if (distanceToWaveRing < waveManager.width * 0.5f && distanceToWaveRing < 0.0f) {
+            double cos = Math.cos(Math.PI * 0.25d * distanceToWaveRing / waveManager.width);
+            waveAlpha = waveManager.alpha * max(0.0f, (float) Math.pow(cos, 20.0d));
         }
-        return (int) (max(hypot, f) * 255.0f);
+
+        return (int) (max(glowAlpha, waveAlpha) * 255);
     }
 
-    private float interp(float f, float f2, float f3) {
-        return ((f2 - f) * f3) + f;
+    private float interp(float min, float max, float f) {
+        return min + (max - min) * f;
     }
 
     public void draw(Canvas canvas) {
-        ArrayList arrayList = this.mPointCloud;
-        canvas.save(1);
-        canvas.scale(this.mScale, this.mScale, this.mCenterX, this.mCenterY);
-        for (int i = 0; i < arrayList.size(); i++) {
-            Point point = (Point) arrayList.get(i);
-            float interp = interp(MAX_POINT_SIZE, MIN_POINT_SIZE, point.radius / this.mOuterRadius);
-            float f = point.x + this.mCenterX;
-            float f2 = point.y + this.mCenterY;
-            int alphaForPoint = getAlphaForPoint(point);
-            if (alphaForPoint != 0) {
-                if (this.mDrawable != null) {
-                    canvas.save(1);
-                    float intrinsicWidth = ((float) this.mDrawable.getIntrinsicWidth()) * 0.5f;
-                    float intrinsicHeight = ((float) this.mDrawable.getIntrinsicHeight()) * 0.5f;
-                    interp /= MAX_POINT_SIZE;
-                    canvas.scale(interp, interp, f, f2);
-                    canvas.translate(f - intrinsicWidth, f2 - intrinsicHeight);
-                    this.mDrawable.setAlpha(alphaForPoint);
-                    this.mDrawable.draw(canvas);
-                    canvas.restore();
-                } else {
-                    this.mPaint.setAlpha(alphaForPoint);
-                    canvas.drawCircle(f, f2, interp, this.mPaint);
-                }
+        ArrayList<Point> points = mPointCloud;
+        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.scale(mScale, mScale, mCenterX, mCenterY);
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            final float pointSize = interp(MAX_POINT_SIZE, MIN_POINT_SIZE,
+                    point.radius / mOuterRadius);
+            final float px = point.x + mCenterX;
+            final float py = point.y + mCenterY;
+            int alpha = getAlphaForPoint(point);
+
+            if (alpha == 0) continue;
+
+            if (mDrawable != null) {
+                canvas.save(Canvas.MATRIX_SAVE_FLAG);
+                final float cx = mDrawable.getIntrinsicWidth() * 0.5f;
+                final float cy = mDrawable.getIntrinsicHeight() * 0.5f;
+                final float s = pointSize / MAX_POINT_SIZE;
+                canvas.scale(s, s, px, py);
+                canvas.translate(px - cx, py - cy);
+                mDrawable.setAlpha(alpha);
+                mDrawable.draw(canvas);
+                canvas.restore();
+            } else {
+                mPaint.setAlpha(alpha);
+                canvas.drawCircle(px, py, pointSize, mPaint);
             }
         }
         canvas.restore();
     }
+
 }

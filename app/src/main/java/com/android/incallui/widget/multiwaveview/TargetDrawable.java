@@ -1,178 +1,250 @@
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.incallui.widget.multiwaveview;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.util.Log;
 
 public class TargetDrawable {
-    private static final boolean DEBUG = false;
-    public static final int[] STATE_ACTIVE = new int[]{16842910, 16842914};
-    public static final int[] STATE_FOCUSED = new int[]{16842910, -16842914, 16842908};
-    public static final int[] STATE_INACTIVE = new int[]{16842910, -16842914};
     private static final String TAG = "TargetDrawable";
+    private static final boolean DEBUG = false;
+
+    public static final int[] STATE_ACTIVE =
+            { android.R.attr.state_enabled, android.R.attr.state_active };
+    public static final int[] STATE_INACTIVE =
+            { android.R.attr.state_enabled, -android.R.attr.state_active };
+    public static final int[] STATE_FOCUSED =
+            { android.R.attr.state_enabled, -android.R.attr.state_active,
+                android.R.attr.state_focused };
+
+    private float mTranslationX = 0.0f;
+    private float mTranslationY = 0.0f;
+    private float mPositionX = 0.0f;
+    private float mPositionY = 0.0f;
+    private float mScaleX = 1.0f;
+    private float mScaleY = 1.0f;
     private float mAlpha = 1.0f;
     private Drawable mDrawable;
     private boolean mEnabled = true;
-    private int mNumDrawables = 1;
-    private float mPositionX = 0.0f;
-    private float mPositionY = 0.0f;
     private final int mResourceId;
-    private float mScaleX = 1.0f;
-    private float mScaleY = 1.0f;
-    private float mTranslationX = 0.0f;
-    private float mTranslationY = 0.0f;
+    private int mNumDrawables = 1;
+    private Rect mBounds;
 
-    public TargetDrawable(Resources resources, int i, int i2) {
-        this.mResourceId = i;
-        setDrawable(resources, i);
-        this.mNumDrawables = i2;
+    /**
+     * This is changed from the framework version to pass in the number of drawables in the
+     * container. The framework version relies on private api's to get the count from
+     * StateListDrawable.
+     *
+     * @param res
+     * @param resId
+     * @param count The number of drawables in the resource.
+     */
+    public TargetDrawable(Resources res, int resId, int count) {
+        mResourceId = resId;
+        setDrawable(res, resId);
+        mNumDrawables = count;
     }
 
-    public void setDrawable(Resources resources, int i) {
-        Drawable drawable = null;
-        Drawable drawable2 = i == 0 ? null : resources.getDrawable(i);
-        if (drawable2 != null) {
-            drawable = drawable2.mutate();
-        }
-        this.mDrawable = drawable;
+    public void setDrawable(Resources res, int resId) {
+        // Note we explicitly don't set mResourceId to resId since we allow the drawable to be
+        // swapped at runtime and want to re-use the existing resource id for identification.
+        Drawable drawable = resId == 0 ? null : res.getDrawable(resId);
+        // Mutate the drawable so we can animate shared drawable properties.
+        mDrawable = drawable != null ? drawable.mutate() : null;
         resizeDrawables();
         setState(STATE_INACTIVE);
     }
 
-    public TargetDrawable(TargetDrawable targetDrawable) {
-        this.mResourceId = targetDrawable.mResourceId;
-        this.mDrawable = targetDrawable.mDrawable != null ? targetDrawable.mDrawable.mutate() : null;
+    public TargetDrawable(TargetDrawable other) {
+        mResourceId = other.mResourceId;
+        // Mutate the drawable so we can animate shared drawable properties.
+        mDrawable = other.mDrawable != null ? other.mDrawable.mutate() : null;
         resizeDrawables();
         setState(STATE_INACTIVE);
     }
 
-    public void setState(int[] iArr) {
-        if (this.mDrawable instanceof StateListDrawable) {
-            ((StateListDrawable) this.mDrawable).setState(iArr);
+    public void setState(int [] state) {
+        if (mDrawable instanceof StateListDrawable) {
+            StateListDrawable d = (StateListDrawable) mDrawable;
+            d.setState(state);
         }
     }
 
+    /**
+     * Returns true if the drawable is a StateListDrawable and is in the focused state.
+     *
+     * @return
+     */
     public boolean isActive() {
-        if (!(this.mDrawable instanceof StateListDrawable)) {
-            return false;
-        }
-        int[] state = ((StateListDrawable) this.mDrawable).getState();
-        for (int i : state) {
-            if (i == 16842908) {
-                return true;
+        if (mDrawable instanceof StateListDrawable) {
+            StateListDrawable d = (StateListDrawable) mDrawable;
+            int[] states = d.getState();
+            for (int i = 0; i < states.length; i++) {
+                if (states[i] == android.R.attr.state_focused) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    /**
+     * Returns true if this target is enabled. Typically an enabled target contains a valid
+     * drawable in a valid state. Currently all targets with valid drawables are valid.
+     *
+     * @return
+     */
     public boolean isEnabled() {
-        return this.mDrawable != null && this.mEnabled;
+        return mDrawable != null && mEnabled;
     }
 
+    /**
+     * Makes drawables in a StateListDrawable all the same dimensions.
+     * If not a StateListDrawable, then justs sets the bounds to the intrinsic size of the
+     * drawable.
+     */
     private void resizeDrawables() {
-        if (this.mDrawable instanceof StateListDrawable) {
-            int i;
-            StateListDrawable stateListDrawable = (StateListDrawable) this.mDrawable;
-            int i2 = 0;
-            int i3 = 0;
-            for (i = 0; i < this.mNumDrawables; i++) {
-                stateListDrawable.selectDrawable(i);
-                Drawable current = stateListDrawable.getCurrent();
-                i3 = Math.max(i3, current.getIntrinsicWidth());
-                i2 = Math.max(i2, current.getIntrinsicHeight());
+        if (mDrawable instanceof StateListDrawable) {
+            StateListDrawable d = (StateListDrawable) mDrawable;
+            int maxWidth = 0;
+            int maxHeight = 0;
+
+            for (int i = 0; i < mNumDrawables; i++) {
+                d.selectDrawable(i);
+                Drawable childDrawable = d.getCurrent();
+                maxWidth = Math.max(maxWidth, childDrawable.getIntrinsicWidth());
+                maxHeight = Math.max(maxHeight, childDrawable.getIntrinsicHeight());
             }
-            stateListDrawable.setBounds(0, 0, i3, i2);
-            for (i = 0; i < this.mNumDrawables; i++) {
-                stateListDrawable.selectDrawable(i);
-                stateListDrawable.getCurrent().setBounds(0, 0, i3, i2);
+
+            if (DEBUG) Log.v(TAG, "union of childDrawable rects " + d + " to: "
+                    + maxWidth + "x" + maxHeight);
+            d.setBounds(0, 0, maxWidth, maxHeight);
+
+            for (int i = 0; i < mNumDrawables; i++) {
+                d.selectDrawable(i);
+                Drawable childDrawable = d.getCurrent();
+                if (DEBUG) Log.v(TAG, "sizing drawable " + childDrawable + " to: "
+                            + maxWidth + "x" + maxHeight);
+                childDrawable.setBounds(0, 0, maxWidth, maxHeight);
             }
-        } else if (this.mDrawable != null) {
-            this.mDrawable.setBounds(0, 0, this.mDrawable.getIntrinsicWidth(), this.mDrawable.getIntrinsicHeight());
+        } else if (mDrawable != null) {
+            mDrawable.setBounds(0, 0,
+                    mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
         }
     }
 
-    public void setX(float f) {
-        this.mTranslationX = f;
+    public void setX(float x) {
+        mTranslationX = x;
     }
 
-    public void setY(float f) {
-        this.mTranslationY = f;
+    public void setY(float y) {
+        mTranslationY = y;
     }
 
-    public void setScaleX(float f) {
-        this.mScaleX = f;
+    public void setScaleX(float x) {
+        mScaleX = x;
     }
 
-    public void setScaleY(float f) {
-        this.mScaleY = f;
+    public void setScaleY(float y) {
+        mScaleY = y;
     }
 
-    public void setAlpha(float f) {
-        this.mAlpha = f;
+    public void setAlpha(float alpha) {
+        mAlpha = alpha;
     }
 
     public float getX() {
-        return this.mTranslationX;
+        return mTranslationX;
     }
 
     public float getY() {
-        return this.mTranslationY;
+        return mTranslationY;
     }
 
     public float getScaleX() {
-        return this.mScaleX;
+        return mScaleX;
     }
 
     public float getScaleY() {
-        return this.mScaleY;
+        return mScaleY;
     }
 
     public float getAlpha() {
-        return this.mAlpha;
+        return mAlpha;
     }
 
-    public void setPositionX(float f) {
-        this.mPositionX = f;
+    public void setPositionX(float x) {
+        mPositionX = x;
     }
 
-    public void setPositionY(float f) {
-        this.mPositionY = f;
+    public void setPositionY(float y) {
+        mPositionY = y;
     }
 
     public float getPositionX() {
-        return this.mPositionX;
+        return mPositionX;
     }
 
     public float getPositionY() {
-        return this.mPositionY;
+        return mPositionY;
     }
 
     public int getWidth() {
-        return this.mDrawable != null ? this.mDrawable.getIntrinsicWidth() : 0;
+        return mDrawable != null ? mDrawable.getIntrinsicWidth() : 0;
     }
 
     public int getHeight() {
-        return this.mDrawable != null ? this.mDrawable.getIntrinsicHeight() : 0;
+        return mDrawable != null ? mDrawable.getIntrinsicHeight() : 0;
+    }
+
+    public Rect getBounds() {
+        if (mBounds == null) {
+            mBounds = new Rect();
+        }
+        mBounds.set((int) (mTranslationX + mPositionX - getWidth() * 0.5),
+                (int) (mTranslationY + mPositionY - getHeight() * 0.5),
+                (int) (mTranslationX + mPositionX + getWidth() * 0.5),
+                (int) (mTranslationY + mPositionY + getHeight() * 0.5));
+        return mBounds;
     }
 
     public void draw(Canvas canvas) {
-        if (this.mDrawable != null && this.mEnabled) {
-            canvas.save(1);
-            canvas.scale(this.mScaleX, this.mScaleY, this.mPositionX, this.mPositionY);
-            canvas.translate(this.mTranslationX + this.mPositionX, this.mTranslationY + this.mPositionY);
-            canvas.translate(((float) getWidth()) * -0.5f, ((float) getHeight()) * -0.5f);
-            this.mDrawable.setAlpha(Math.round(this.mAlpha * 255.0f));
-            this.mDrawable.draw(canvas);
-            canvas.restore();
+        if (mDrawable == null || !mEnabled) {
+            return;
         }
+        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.scale(mScaleX, mScaleY, mPositionX, mPositionY);
+        canvas.translate(mTranslationX + mPositionX, mTranslationY + mPositionY);
+        canvas.translate(-0.5f * getWidth(), -0.5f * getHeight());
+        mDrawable.setAlpha((int) Math.round(mAlpha * 255f));
+        mDrawable.draw(canvas);
+        canvas.restore();
     }
 
-    public void setEnabled(boolean z) {
-        this.mEnabled = z;
+    public void setEnabled(boolean enabled) {
+        mEnabled  = enabled;
     }
 
     public int getResourceId() {
-        return this.mResourceId;
+        return mResourceId;
     }
 }
