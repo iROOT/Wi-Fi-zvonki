@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
     <LinearLayout android:orientation="vertical" android:paddingLeft="10dp" android:paddingTop="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_display_name"/>
-        <EditText android:id="@g/displayNameEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text">
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_display_name"/>
+        <EditText android:id="@+id/displayNameEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text">
             <requestFocus/>
         </EditText>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@k/preference_quick_public_id"/>
-        <EditText android:id="@g/publicIdEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_public_domain"/>
-        <EditText android:id="@g/publicDomainEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@k/preference_quick_private_id"/>
-        <EditText android:id="@g/privateIdEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_private_domain"/>
-        <EditText android:id="@g/privateDomainEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_password"/>
-        <EditText android:id="@g/passwordEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="textPassword"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_proxy"/>
-        <EditText android:id="@g/proxyEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_quick_port"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/preference_quick_public_id"/>
+        <EditText android:id="@+id/publicIdEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_public_domain"/>
+        <EditText android:id="@+id/publicDomainEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/preference_quick_private_id"/>
+        <EditText android:id="@+id/privateIdEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_private_domain"/>
+        <EditText android:id="@+id/privateDomainEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_password"/>
+        <EditText android:id="@+id/passwordEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="textPassword"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_proxy"/>
+        <EditText android:id="@+id/proxyEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="text"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_quick_port"/>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-            <EditText android:id="@g/portEditText" android:layout_width="0dp" android:layout_height="wrap_content" android:ems="10" android:maxLength="5" android:layout_weight="2" android:inputType="number"/>
-            <Spinner android:entries="@b/transport_protocol" android:id="@g/transportSpinner" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <EditText android:id="@+id/portEditText" android:layout_width="0dp" android:layout_height="wrap_content" android:ems="10" android:maxLength="5" android:layout_weight="2" android:inputType="number"/>
+            <Spinner android:entries="@array/transport_protocol" android:id="@+id/transportSpinner" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
         </LinearLayout>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@k/preference_quick_imei"/>
-        <EditText android:id="@g/imeiEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:maxLength="15" android:inputType="number"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/app_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/preference_quick_imei"/>
+        <EditText android:id="@+id/imeiEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:maxLength="15" android:inputType="number"/>
     </LinearLayout>
 </ScrollView>

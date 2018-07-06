@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@f/ic_action_new" android:id="@g/menu_new_sbc" android:title="@k/menu_lte_new_sbc" custom:showAsAction="ifRoom"/>
-    <item android:icon="@f/ic_action_delete" android:id="@g/menu_clear_sbc" android:title="@k/menu_lte_clear_sbc" custom:showAsAction="ifRoom"/>
+    <item android:icon="@drawable/ic_action_new" android:id="@+id/menu_new_sbc" android:title="@string/menu_lte_new_sbc" custom:showAsAction="ifRoom"/>
+    <item android:icon="@drawable/ic_action_delete" android:id="@+id/menu_clear_sbc" android:title="@string/menu_lte_clear_sbc" custom:showAsAction="ifRoom"/>
 </menu>

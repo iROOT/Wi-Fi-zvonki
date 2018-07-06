@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@g/help_topic_detail_container" android:layout_width="match_parent" android:layout_height="match_parent"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@+id/help_topic_detail_container" android:layout_width="match_parent" android:layout_height="match_parent"/>

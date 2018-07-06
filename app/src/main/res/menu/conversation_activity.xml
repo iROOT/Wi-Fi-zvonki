@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:id="@g/conversation_add_users" android:visible="false" android:title="@k/menu_invite_users"/>
-    <item android:id="@g/group_chat_leave" android:visible="false" android:title="@k/menu_leave_conversation"/>
+    <item android:id="@+id/conversation_add_users" android:visible="false" android:title="@string/menu_invite_users"/>
+    <item android:id="@+id/group_chat_leave" android:visible="false" android:title="@string/menu_leave_conversation"/>
 </menu>

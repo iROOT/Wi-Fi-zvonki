@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" style="@style/Layout.Fill">
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textStyle="bold" android:textColor="@e/header" android:id="@g/header_text" android:background="@e/header_background" android:paddingLeft="10dp" android:paddingTop="5dp" android:paddingRight="10dp" android:paddingStart="10dp" android:paddingEnd="10dp" style="@style/Layout.WrapHeight"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textStyle="bold" android:textColor="@color/header" android:id="@+id/header_text" android:background="@color/header_background" android:paddingLeft="10dp" android:paddingTop="5dp" android:paddingRight="10dp" android:paddingStart="10dp" android:paddingEnd="10dp" style="@style/Layout.WrapHeight"/>
     <RelativeLayout android:padding="5dp" style="@style/Layout.WrapHeight">
-        <RelativeLayout android:id="@g/AvatarLayout" style="@style/Layout.Wrap">
-            <ImageView android:id="@g/avatar_image" android:background="@f/avatar_background" android:layout_width="55dp" android:layout_height="55dp" android:layout_centerInParent="true" android:contentDescription="@k/cd_contacts_avatar"/>
-            <ImageView android:id="@g/social_presence_image" android:visibility="gone" android:layout_width="15dp" android:layout_height="15dp" android:layout_alignRight="@g/avatar_image" android:layout_alignBottom="@g/avatar_image" android:contentDescription="@k/cd_contacts_presence" android:layout_alignEnd="@g/avatar_image"/>
-            <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/avatar_initials" android:text="@k/call_log_avatar_initials_hint" android:maxLength="2" android:layout_centerInParent="true" style="@style/Layout.Wrap"/>
+        <RelativeLayout android:id="@+id/AvatarLayout" style="@style/Layout.Wrap">
+            <ImageView android:id="@+id/avatar_image" android:background="@drawable/avatar_background" android:layout_width="55dp" android:layout_height="55dp" android:layout_centerInParent="true" android:contentDescription="@string/cd_contacts_avatar"/>
+            <ImageView android:id="@+id/social_presence_image" android:visibility="gone" android:layout_width="15dp" android:layout_height="15dp" android:layout_alignRight="@id/avatar_image" android:layout_alignBottom="@id/avatar_image" android:contentDescription="@string/cd_contacts_presence" android:layout_alignEnd="@id/avatar_image"/>
+            <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/avatar_initials" android:text="@string/call_log_avatar_initials_hint" android:maxLength="2" android:layout_centerInParent="true" style="@style/Layout.Wrap"/>
         </RelativeLayout>
-        <LinearLayout android:orientation="vertical" android:layout_toLeftOf="@g/right_side" android:layout_toRightOf="@g/AvatarLayout" android:layout_centerVertical="true" android:layout_toStartOf="@g/right_side" android:layout_toEndOf="@g/AvatarLayout" style="@style/Layout.WrapHeight">
-            <TextView android:id="@g/list_item_title" style="@style/ListItemTitleStyle"/>
-            <TextView android:id="@g/list_item_number" style="@style/ListItemSubTitleStyle"/>
+        <LinearLayout android:orientation="vertical" android:layout_toLeftOf="@id/right_side" android:layout_toRightOf="@id/AvatarLayout" android:layout_centerVertical="true" android:layout_toStartOf="@id/right_side" android:layout_toEndOf="@id/AvatarLayout" style="@style/Layout.WrapHeight">
+            <TextView android:id="@+id/list_item_title" style="@style/ListItemTitleStyle"/>
+            <TextView android:id="@+id/list_item_number" style="@style/ListItemSubTitleStyle"/>
         </LinearLayout>
-        <LinearLayout android:orientation="horizontal" android:id="@g/right_side" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:layout_marginStart="10dp" android:layout_marginEnd="10dp" android:layout_alignParentEnd="true" style="@style/Layout.Wrap">
-            <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/call_button" android:background="@f/listview_row_selected" android:src="@f/ic_action_call_color" style="@style/ListItemActionStyle"/>
-            <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/sms_button" android:background="@f/listview_row_selected" android:layout_marginRight="5dp" android:src="@f/ic_action_message_color" android:layout_marginEnd="5dp" style="@style/ListItemActionStyle"/>
-            <com.mavenir.android.view.DontPressWithParentImageView android:layout_gravity="center_vertical" android:id="@g/availability_icon" android:visibility="gone" android:adjustViewBounds="true" style="@style/Layout.Wrap"/>
-            <com.mavenir.android.view.DontPressWithParentImageView android:layout_gravity="center_vertical" android:id="@g/rcs_icon" android:background="@f/listview_row_selected" android:visibility="gone" android:adjustViewBounds="true" style="@style/Layout.Wrap"/>
-            <CheckBox android:id="@g/add_contact_checkbox" android:visibility="gone" style="@style/Layout.Wrap"/>
+        <LinearLayout android:orientation="horizontal" android:id="@+id/right_side" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:layout_marginStart="10dp" android:layout_marginEnd="10dp" android:layout_alignParentEnd="true" style="@style/Layout.Wrap">
+            <com.mavenir.android.view.DontPressWithParentImageView android:id="@+id/call_button" android:background="@drawable/listview_row_selected" android:src="@drawable/ic_action_call_color" style="@style/ListItemActionStyle"/>
+            <com.mavenir.android.view.DontPressWithParentImageView android:id="@+id/sms_button" android:background="@drawable/listview_row_selected" android:layout_marginRight="5dp" android:src="@drawable/ic_action_message_color" android:layout_marginEnd="5dp" style="@style/ListItemActionStyle"/>
+            <com.mavenir.android.view.DontPressWithParentImageView android:layout_gravity="center_vertical" android:id="@+id/availability_icon" android:visibility="gone" android:adjustViewBounds="true" style="@style/Layout.Wrap"/>
+            <com.mavenir.android.view.DontPressWithParentImageView android:layout_gravity="center_vertical" android:id="@+id/rcs_icon" android:background="@drawable/listview_row_selected" android:visibility="gone" android:adjustViewBounds="true" style="@style/Layout.Wrap"/>
+            <CheckBox android:id="@+id/add_contact_checkbox" android:visibility="gone" style="@style/Layout.Wrap"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

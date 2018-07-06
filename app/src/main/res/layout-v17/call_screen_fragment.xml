@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@g/main" android:layout_width="match_parent" android:layout_height="match_parent">
-    <FrameLayout android:id="@g/inCallShareFragment" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent"/>
-    <LinearLayout android:orientation="vertical" android:id="@g/call_screen_container" android:layout_width="match_parent" android:layout_height="match_parent">
-        <RelativeLayout android:id="@g/call_screen_call_card_container" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-            <FrameLayout android:id="@g/inCallVideoFragmentParent" android:layout_width="match_parent" android:layout_height="match_parent">
-                <FrameLayout android:id="@g/inCallVideoFragment" android:layout_width="match_parent" android:layout_height="match_parent"/>
-                <ImageButton android:id="@g/call_screen_video_off_button" android:background="@android:color/transparent" android:visibility="gone" style="@style/CallScreen.Button"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout android:id="@+id/inCallShareFragment" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/call_screen_container" android:layout_width="match_parent" android:layout_height="match_parent">
+        <RelativeLayout android:id="@+id/call_screen_call_card_container" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <FrameLayout android:id="@+id/inCallVideoFragmentParent" android:layout_width="match_parent" android:layout_height="match_parent">
+                <FrameLayout android:id="@+id/inCallVideoFragment" android:layout_width="match_parent" android:layout_height="match_parent"/>
+                <ImageButton android:id="@+id/call_screen_video_off_button" android:background="@android:color/transparent" android:visibility="gone" style="@style/CallScreen.Button"/>
             </FrameLayout>
-            <fragment android:name="com.mavenir.android.fragments.CallCardFragment" android:id="@g/callCardFragment" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true"/>
-            <fragment android:name="com.mavenir.android.fragments.CallDialpadFragment" android:id="@g/callDialpadFragment" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true"/>
-            <FrameLayout android:id="@g/callEarlyActionsFragment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerVertical="true"/>
+            <fragment android:name="com.mavenir.android.fragments.CallCardFragment" android:id="@+id/callCardFragment" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true"/>
+            <fragment android:name="com.mavenir.android.fragments.CallDialpadFragment" android:id="@+id/callDialpadFragment" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true"/>
+            <FrameLayout android:id="@+id/callEarlyActionsFragment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerVertical="true"/>
         </RelativeLayout>
-        <fragment android:name="com.mavenir.android.fragments.CallButtonFragment" android:id="@g/callButtonFragment" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <fragment android:name="com.mavenir.android.fragments.CallButtonFragment" android:id="@+id/callButtonFragment" android:layout_width="match_parent" android:layout_height="wrap_content"/>
     </LinearLayout>
-    <fragment android:name="com.mavenir.android.fragments.CallAnswerFragment" android:gravity="top" android:layout_gravity="bottom|center_vertical|center_horizontal|center" android:id="@g/callAnswerFragment" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/glowpadview_margin_bottom"/>
-    <fragment android:name="com.mavenir.android.fragments.CallConferenceManagerFragment" android:id="@g/callConferenceManagerFragment" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <fragment android:name="com.mavenir.android.fragments.CallAnswerFragment" android:gravity="top" android:layout_gravity="bottom|center_vertical|center_horizontal|center" android:id="@+id/callAnswerFragment" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/glowpadview_margin_bottom"/>
+    <fragment android:name="com.mavenir.android.fragments.CallConferenceManagerFragment" android:id="@+id/callConferenceManagerFragment" android:layout_width="match_parent" android:layout_height="match_parent"/>
 </FrameLayout>

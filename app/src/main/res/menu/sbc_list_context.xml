@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@f/ic_action_delete" android:id="@g/menu_delete_sbc" android:title="@k/menu_lte_delete_sbc" custom:showAsAction="always"/>
+    <item android:icon="@drawable/ic_action_delete" android:id="@+id/menu_delete_sbc" android:title="@string/menu_lte_delete_sbc" custom:showAsAction="always"/>
 </menu>

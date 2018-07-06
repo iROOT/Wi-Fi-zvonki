@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="70dp">
-    <ImageView android:id="@g/icon1" android:background="#00000000" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:layout_marginTop="10dp" android:layout_marginBottom="10dp"/>
-    <TextView android:textSize="22sp" android:typeface="normal" android:textStyle="bold" android:textColor="#ff0985ff" android:id="@g/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:layout_marginTop="20dp" android:layout_marginBottom="20dp" android:layout_toRightOf="@g/icon1"/>
+    <ImageView android:id="@+id/icon1" android:background="#00000000" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:layout_marginTop="10dp" android:layout_marginBottom="10dp"/>
+    <TextView android:textSize="22sp" android:typeface="normal" android:textStyle="bold" android:textColor="#ff0985ff" android:id="@+id/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:layout_marginTop="20dp" android:layout_marginBottom="20dp" android:layout_toRightOf="@id/icon1"/>
 </RelativeLayout>

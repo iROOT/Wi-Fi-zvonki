@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/recipientMainContainer" android:layout_width="match_parent" android:layout_height="match_parent">
-    <LinearLayout android:id="@g/recipientContainerLayout" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp">
-        <ScrollView android:id="@g/recipientScrollView" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="10dp">
-            <com.mavenir.android.view.FlowLayout android:id="@g/recipientFlowLayout" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@+id/recipientMainContainer" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/recipientContainerLayout" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp">
+        <ScrollView android:id="@+id/recipientScrollView" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="10dp">
+            <com.mavenir.android.view.FlowLayout android:id="@+id/recipientFlowLayout" android:layout_width="match_parent" android:layout_height="wrap_content"/>
         </ScrollView>
     </LinearLayout>
-    <LinearLayout android:id="@g/recipientInputLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp">
-        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10dp" android:text="@k/message_recipient_to_hint"/>
-        <AutoCompleteTextView android:textColor="@e/white" android:id="@g/recipientEditText" android:layout_width="0dp" android:layout_height="wrap_content" android:hint="@k/message_recipient_enter_hint" android:maxLines="1" android:ems="10" android:layout_weight="1" android:imeOptions="actionNext" android:textCursorDrawable="@null">
+    <LinearLayout android:id="@+id/recipientInputLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp">
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10dp" android:text="@string/message_recipient_to_hint"/>
+        <AutoCompleteTextView android:textColor="@color/white" android:id="@+id/recipientEditText" android:layout_width="0dp" android:layout_height="wrap_content" android:hint="@string/message_recipient_enter_hint" android:maxLines="1" android:ems="10" android:layout_weight="1" android:imeOptions="actionNext" android:textCursorDrawable="@null">
             <requestFocus/>
         </AutoCompleteTextView>
     </LinearLayout>
-    <View android:id="@g/separator" style="@style/ListItemHorizontalDividerStyle"/>
+    <View android:id="@+id/separator" style="@style/ListItemHorizontalDividerStyle"/>
 </LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center_horizontal" android:orientation="vertical" android:id="@g/avatar_layout" android:padding="2dp" android:layout_width="60dp" android:layout_height="wrap_content">
-    <ImageView android:id="@g/r_avatar" android:layout_width="50dp" android:layout_height="50dp" android:layout_margin="5dp" android:src="@f/mainavatar"/>
-    <TextView android:textStyle="bold" android:ellipsize="end" android:gravity="center" android:id="@g/group_name_text" android:singleLine="true" style="@style/Layout.Wrap"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center_horizontal" android:orientation="vertical" android:id="@+id/avatar_layout" android:padding="2dp" android:layout_width="60dp" android:layout_height="wrap_content">
+    <ImageView android:id="@+id/r_avatar" android:layout_width="50dp" android:layout_height="50dp" android:layout_margin="5dp" android:src="@drawable/mainavatar"/>
+    <TextView android:textStyle="bold" android:ellipsize="end" android:gravity="center" android:id="@+id/group_name_text" android:singleLine="true" style="@style/Layout.Wrap"/>
 </LinearLayout>

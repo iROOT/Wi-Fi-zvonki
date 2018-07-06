@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/ActivationLinearLayout" android:layout_width="match_parent" android:layout_height="match_parent">
-    <ListView android:entries="@b/activation_choice" android:id="@g/activationListView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/dialogMessageTextView" android:padding="10dp" android:layout_width="match_parent" android:layout_height="0dp" android:text="@k/activation_account_not_valid_message" android:layout_weight="1"/>
-    <include android:id="@g/dialogAuthFormView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" layout="@h/activation_auth_form"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@+id/ActivationLinearLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ListView android:entries="@array/activation_choice" android:id="@+id/activationListView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/dialogMessageTextView" android:padding="10dp" android:layout_width="match_parent" android:layout_height="0dp" android:text="@string/activation_account_not_valid_message" android:layout_weight="1"/>
+    <include android:id="@+id/dialogAuthFormView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" layout="@layout/activation_auth_form"/>
     <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <Button android:id="@g/dialogNegativeButton" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/dialog_back" android:layout_weight="1"/>
-        <Button android:id="@g/dialogPositiveButton" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/dialog_ok" android:layout_weight="1"/>
+        <Button android:id="@+id/dialogNegativeButton" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/dialog_back" android:layout_weight="1"/>
+        <Button android:id="@+id/dialogPositiveButton" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/dialog_ok" android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>

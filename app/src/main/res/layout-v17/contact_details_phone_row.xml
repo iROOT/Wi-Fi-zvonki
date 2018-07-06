@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:padding="5dp" android:baselineAligned="false" style="@style/Layout.WrapHeight">
-    <RelativeLayout android:id="@g/callLayout" android:layout_marginLeft="5dp" android:layout_marginStart="5dp" style="@style/Layout.DistributeWidth">
-        <TextView android:textColor="@e/white" android:id="@g/text1" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true" style="@style/Layout.Wrap"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/white" android:ellipsize="end" android:id="@g/text2" android:singleLine="true" android:layout_below="@g/text1" android:layout_alignLeft="@g/text1" android:layout_alignStart="@g/text1" style="@style/Layout.Wrap"/>
-        <ImageView android:id="@g/defaultIcon" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@f/ic_check" android:layout_toRightOf="@g/text2" android:layout_alignTop="@g/text2" android:layout_alignBottom="@g/text2" android:contentDescription="@k/about_copyright" android:layout_toEndOf="@g/text2"/>
+    <RelativeLayout android:id="@+id/callLayout" android:layout_marginLeft="5dp" android:layout_marginStart="5dp" style="@style/Layout.DistributeWidth">
+        <TextView android:textColor="@color/white" android:id="@+id/text1" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true" style="@style/Layout.Wrap"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@color/white" android:ellipsize="end" android:id="@+id/text2" android:singleLine="true" android:layout_below="@id/text1" android:layout_alignLeft="@id/text1" android:layout_alignStart="@id/text1" style="@style/Layout.Wrap"/>
+        <ImageView android:id="@+id/defaultIcon" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_check" android:layout_toRightOf="@id/text2" android:layout_alignTop="@id/text2" android:layout_alignBottom="@id/text2" android:contentDescription="@string/about_copyright" android:layout_toEndOf="@id/text2"/>
     </RelativeLayout>
-    <LinearLayout android:gravity="center_vertical" android:id="@g/actionsLayout" style="@style/Layout.WrapWidth">
-        <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/callButton" android:src="@f/ic_action_call_color" style="@style/ListItemActionStyle"/>
-        <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/messageButton" android:src="@f/ic_action_message_color" style="@style/ListItemActionStyle"/>
-        <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/groupIndicatorButton" android:visibility="gone" android:src="@f/ic_right" style="@style/ListItemActionStyle"/>
+    <LinearLayout android:gravity="center_vertical" android:id="@+id/actionsLayout" style="@style/Layout.WrapWidth">
+        <com.mavenir.android.view.DontPressWithParentImageView android:id="@+id/callButton" android:src="@drawable/ic_action_call_color" style="@style/ListItemActionStyle"/>
+        <com.mavenir.android.view.DontPressWithParentImageView android:id="@+id/messageButton" android:src="@drawable/ic_action_message_color" style="@style/ListItemActionStyle"/>
+        <com.mavenir.android.view.DontPressWithParentImageView android:id="@+id/groupIndicatorButton" android:visibility="gone" android:src="@drawable/ic_right" style="@style/ListItemActionStyle"/>
     </LinearLayout>
 </LinearLayout>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
-    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/white" android:id="@g/name" android:paddingLeft="10dp" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/white" android:id="@g/number" android:paddingLeft="10dp" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="5dp"/>
-    <LinearLayout android:orientation="horizontal" android:id="@g/popup_layout" android:weightSum="3" style="@style/Layout.Wrap">
-        <TextView android:id="@g/quick_call" android:tag="action" android:clickable="true" android:text="@k/quick_call" android:drawablePadding="1dp" style="@style/QuickButtons"/>
-        <TextView android:id="@g/quick_geoloc" android:tag="action" android:visibility="gone" android:clickable="true" android:text="@k/quick_geoloc" android:drawablePadding="1dp" style="@style/QuickButtons"/>
-        <TextView android:id="@g/quick_contact" android:tag="action" android:clickable="true" android:text="@k/quick_contact" android:drawablePadding="1dp" style="@style/QuickButtons"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@color/white" android:id="@+id/name" android:paddingLeft="10dp" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/white" android:id="@+id/number" android:paddingLeft="10dp" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="5dp"/>
+    <LinearLayout android:orientation="horizontal" android:id="@+id/popup_layout" android:weightSum="3" style="@style/Layout.Wrap">
+        <TextView android:id="@+id/quick_call" android:tag="action" android:clickable="true" android:text="@string/quick_call" android:drawablePadding="1dp" style="@style/QuickButtons"/>
+        <TextView android:id="@+id/quick_geoloc" android:tag="action" android:visibility="gone" android:clickable="true" android:text="@string/quick_geoloc" android:drawablePadding="1dp" style="@style/QuickButtons"/>
+        <TextView android:id="@+id/quick_contact" android:tag="action" android:clickable="true" android:text="@string/quick_contact" android:drawablePadding="1dp" style="@style/QuickButtons"/>
     </LinearLayout>
 </LinearLayout>

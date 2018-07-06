@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@f/ic_action_call_color" android:id="@g/menu_call" android:title="@k/menu_call"/>
-    <item android:icon="@f/ic_action_message_color" android:id="@g/menu_sms" android:title="@k/menu_sms"/>
-    <item android:icon="@f/ic_action_delete" android:id="@g/menu_delete" android:title="@k/menu_delete"/>
+    <item android:icon="@drawable/ic_action_call_color" android:id="@+id/menu_call" android:title="@string/menu_call"/>
+    <item android:icon="@drawable/ic_action_message_color" android:id="@+id/menu_sms" android:title="@string/menu_sms"/>
+    <item android:icon="@drawable/ic_action_delete" android:id="@+id/menu_delete" android:title="@string/menu_delete"/>
 </menu>

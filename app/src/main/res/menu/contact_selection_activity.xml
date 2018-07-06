@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:id="@g/menu_multiselect" android:orderInCategory="100" android:title="@k/menu_multiple_select" android:showAsAction="always"/>
+    <item android:id="@+id/menu_multiselect" android:orderInCategory="100" android:title="@string/menu_multiple_select" android:showAsAction="always"/>
 </menu>

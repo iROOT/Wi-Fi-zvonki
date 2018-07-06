@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@g/manage_conference_panel" android:background="#ff000000" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
-    <FrameLayout android:id="@g/manage_conference_header" android:background="@drawable/abc_ab_transparent_dark_holo" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:orientation="horizontal" android:id="@g/conference_manage_done" android:background="?android:attr/selectableItemBackground" android:clickable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@+id/manage_conference_panel" android:background="#ff000000" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout android:id="@+id/manage_conference_header" android:background="@drawable/abc_ab_transparent_dark_holo" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <LinearLayout android:orientation="horizontal" android:id="@+id/conference_manage_done" android:background="?android:attr/selectableItemBackground" android:clickable="true" android:layout_width="match_parent" android:layout_height="wrap_content">
             <ImageView android:layout_gravity="left|center_vertical|center_horizontal|center|start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="?android:attr/homeAsUpIndicator"/>
-            <TextView android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="?android:attr/actionBarSize" android:text="@k/cd_incall_manage_conference" style="@style/TextAppearance.Holo.Widget.ActionBar.Title"/>
+            <TextView android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="?android:attr/actionBarSize" android:text="@string/cd_incall_manage_conference" style="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"/>
         </LinearLayout>
     </FrameLayout>
-    <ScrollView android:id="@g/conference_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@g/manage_conference_header">
+    <ScrollView android:id="@+id/conference_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/manage_conference_header">
         <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:divider="?android:attr/listDivider" android:showDividers="none|middle|end">
-            <include android:id="@g/conference_caller0" layout="@h/call_screen_caller_in_conference"/>
-            <include android:id="@g/conference_caller1" layout="@h/call_screen_caller_in_conference"/>
+            <include android:id="@+id/conference_caller0" layout="@layout/call_screen_caller_in_conference"/>
+            <include android:id="@+id/conference_caller1" layout="@layout/call_screen_caller_in_conference"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

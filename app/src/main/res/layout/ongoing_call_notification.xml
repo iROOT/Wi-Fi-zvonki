@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="65sp" android:baselineAligned="false">
-    <LinearLayout android:orientation="vertical" android:id="@g/chronometer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="4dp" android:layout_toLeftOf="@+id/icon">
-        <Chronometer android:textSize="18sp" android:textStyle="bold" android:id="@g/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" style="@style/TextAppearance.StatusBar.EventContent.Title"/>
-        <TextView android:textSize="14sp" android:id="@g/text2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" style="@style/TextAppearance.StatusBar.EventContent"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/chronometer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="4dp" android:layout_toLeftOf="@+id/icon">
+        <Chronometer android:textSize="18sp" android:textStyle="bold" android:id="@+id/text1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" style="@style/TextAppearance.StatusBar.EventContent.Title"/>
+        <TextView android:textSize="14sp" android:id="@+id/text2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" style="@style/TextAppearance.StatusBar.EventContent"/>
     </LinearLayout>
-    <ImageView android:id="@+id/icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="4dp" android:layout_marginRight="4dp" android:layout_alignBottom="@g/chronometer" android:layout_alignParentRight="true" android:contentDescription="@k/cd_notification_ongoing"/>
+    <ImageView android:id="@+id/icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="4dp" android:layout_marginRight="4dp" android:layout_alignBottom="@id/chronometer" android:layout_alignParentRight="true" android:contentDescription="@string/cd_notification_ongoing"/>
 </RelativeLayout>

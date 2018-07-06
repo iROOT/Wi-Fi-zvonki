@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="DEF_EMERGENCY_NUMBERS">
+    <string-array name="DEF_EMERGENCY_NUMBERS">
         <item>112</item>
         <item>01</item>
         <item>02</item>
@@ -10,34 +10,34 @@
         <item>102</item>
         <item>103</item>
         <item>104</item>
-    </array>
-    <array name="MessageTimeStampBuilder">
+    </string-array>
+    <string-array name="MessageTimeStampBuilder">
         <item>@string/time_second</item>
         <item>@string/time_minute</item>
         <item>@string/time_hour</item>
         <item>@string/time_day</item>
-    </array>
-    <array name="activation_choice">
+    </string-array>
+    <string-array name="activation_choice">
         <item>@string/activation_choice_use</item>
         <item>@string/activation_choice_give</item>
         <item>@string/activation_choice_help</item>
         <item>@string/activation_choice_exit</item>
-    </array>
-    <array name="alert_tone_volume_list">
+    </string-array>
+    <string-array name="alert_tone_volume_list">
         <item>@string/value_off</item>
         <item>@string/value_low</item>
         <item>@string/value_medium</item>
         <item>@string/value_high</item>
-    </array>
-    <array name="audioExceptionModels">
+    </string-array>
+    <string-array name="audioExceptionModels">
         <item>D2303</item>
         <item>D6502</item>
         <item>D6503</item>
         <item>D6603</item>
         <item>A0001</item>
-    </array>
-    <array name="codec_modes_amr">
-        <item>@null</item>
+    </string-array>
+    <string-array name="codec_modes_amr">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -45,9 +45,9 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
-    </array>
-    <array name="codec_modes_amrwb">
-        <item>@null</item>
+    </string-array>
+    <string-array name="codec_modes_amrwb">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -56,16 +56,16 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
-    </array>
-    <array name="connection_preference">
+    </string-array>
+    <string-array name="connection_preference">
         <item>@string/preference_wifi_connection_wifi_only</item>
         <item>@string/preference_wifi_connection_wifi_pref</item>
         <item>@string/preference_wifi_connection_wifi_cs</item>
-    </array>
-    <array name="dtmf_signalization_list">
+    </string-array>
+    <string-array name="dtmf_signalization_list">
         <item>@string/preference_dtmf_inband</item>
         <item>@string/preference_dtmf_outofband</item>
-    </array>
+    </string-array>
     <array name="emo_image_ids">
         <item>@drawable/emo_angel</item>
         <item>@drawable/emo_angry</item>
@@ -85,7 +85,7 @@
         <item>@drawable/emo_tongue</item>
         <item>@drawable/emo_wink</item>
     </array>
-    <array name="emo_names">
+    <string-array name="emo_names">
         <item>@string/emo_angel</item>
         <item>@string/emo_angry</item>
         <item>@string/emo_big_smile</item>
@@ -103,15 +103,15 @@
         <item>@string/emo_smile</item>
         <item>@string/emo_tongue</item>
         <item>@string/emo_wink</item>
-    </array>
-    <array name="emo_shortcuts">
+    </string-array>
+    <string-array name="emo_shortcuts">
         <item>O:-)</item>
         <item>:-@</item>
         <item>:-D</item>
         <item>:-$</item>
         <item>:-S</item>
         <item>B-)</item>
-        <item>:&apos;-(</item>
+        <item>":'-("</item>
         <item>]:-)</item>
         <item>:-|</item>
         <item>:-*</item>
@@ -122,15 +122,15 @@
         <item>:-)</item>
         <item>:-P</item>
         <item>;-)</item>
-    </array>
-    <array name="emo_shortcuts_short">
+    </string-array>
+    <string-array name="emo_shortcuts_short">
         <item>O:)</item>
         <item>:@</item>
         <item>:D</item>
         <item>:$</item>
         <item>:S</item>
         <item>B)</item>
-        <item>:&apos;(</item>
+        <item>":'("</item>
         <item>]:)</item>
         <item>:|</item>
         <item>:*</item>
@@ -141,49 +141,49 @@
         <item>:)</item>
         <item>:P</item>
         <item>;)</item>
-    </array>
-    <array name="incoming_call_widget_2way_direction_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_2way_direction_descriptions">
         <item>@string/description_direction_right</item>
         <item>@null</item>
         <item>@string/description_direction_left</item>
         <item>@null</item>
-    </array>
-    <array name="incoming_call_widget_2way_target_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_2way_target_descriptions">
         <item>@string/description_target_answer</item>
         <item>@null</item>
         <item>@string/description_target_decline</item>
         <item>@null</item>
-    </array>
+    </string-array>
     <array name="incoming_call_widget_2way_targets">
         <item>@drawable/ic_lockscreen_answer</item>
         <item>@null</item>
         <item>@drawable/ic_lockscreen_decline</item>
         <item>@null</item>
     </array>
-    <array name="incoming_call_widget_3way_direction_descriptions">
+    <string-array name="incoming_call_widget_3way_direction_descriptions">
         <item>@string/description_direction_right</item>
         <item>@string/description_direction_up</item>
         <item>@string/description_direction_left</item>
         <item>@null</item>
-    </array>
-    <array name="incoming_call_widget_3way_direction_down_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_3way_direction_down_descriptions">
         <item>@string/description_direction_right</item>
         <item>@null</item>
         <item>@string/description_direction_left</item>
         <item>@string/description_direction_down</item>
-    </array>
-    <array name="incoming_call_widget_3way_target_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_3way_target_descriptions">
         <item>@string/description_target_answer</item>
         <item>@string/description_target_send_sms</item>
         <item>@string/description_target_decline</item>
         <item>@null</item>
-    </array>
-    <array name="incoming_call_widget_3way_target_down_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_3way_target_down_descriptions">
         <item>@string/description_target_answer</item>
         <item>@null</item>
         <item>@string/description_target_decline</item>
         <item>@string/description_target_action</item>
-    </array>
+    </string-array>
     <array name="incoming_call_widget_3way_targets">
         <item>@drawable/ic_lockscreen_answer</item>
         <item>@drawable/ic_lockscreen_text</item>
@@ -196,88 +196,88 @@
         <item>@drawable/ic_lockscreen_decline</item>
         <item>@drawable/ic_lockscreen_action</item>
     </array>
-    <array name="incoming_call_widget_4way_direction_descriptions">
+    <string-array name="incoming_call_widget_4way_direction_descriptions">
         <item>@string/description_direction_right</item>
         <item>@string/description_direction_up</item>
         <item>@string/description_direction_left</item>
         <item>@string/description_direction_down</item>
-    </array>
-    <array name="incoming_call_widget_4way_target_descriptions">
+    </string-array>
+    <string-array name="incoming_call_widget_4way_target_descriptions">
         <item>@string/description_target_answer</item>
         <item>@string/description_target_send_sms</item>
         <item>@string/description_target_decline</item>
         <item>@string/description_target_action</item>
-    </array>
+    </string-array>
     <array name="incoming_call_widget_4way_targets_down">
         <item>@drawable/ic_lockscreen_answer</item>
         <item>@drawable/ic_lockscreen_text</item>
         <item>@drawable/ic_lockscreen_decline</item>
         <item>@drawable/ic_lockscreen_action</item>
     </array>
-    <array name="list_of_ATI">
+    <string-array name="list_of_ATI">
         <item>@string/preference_media_ati_off</item>
         <item>@string/preference_media_ati_pass</item>
         <item>@string/preference_media_ati_tick</item>
-    </array>
-    <array name="list_of_codecs">
+    </string-array>
+    <string-array name="list_of_codecs">
         <item>@string/preference_media_codec_amrwb</item>
         <item>@string/preference_media_codec_amr</item>
         <item>@string/preference_media_codec_pcma</item>
         <item>@string/preference_media_codec_pcmu</item>
         <item>@string/preference_media_codec_g729</item>
-    </array>
-    <array name="list_of_codecs_extended">
+    </string-array>
+    <string-array name="list_of_codecs_extended">
         <item>@string/preference_media_codec_amrwb</item>
         <item>@string/preference_media_codec_amr</item>
         <item>@string/preference_media_codec_pcma</item>
         <item>@string/preference_media_codec_pcmu</item>
-    </array>
-    <array name="list_of_video_codecs">
+    </string-array>
+    <string-array name="list_of_video_codecs">
         <item>H.263</item>
         <item>H.264</item>
         <item>VP8</item>
-    </array>
-    <array name="list_of_video_sizes">
+    </string-array>
+    <string-array name="list_of_video_sizes">
         <item>160x120</item>
         <item>176x144</item>
         <item>320x240</item>
         <item>352x288</item>
         <item>640x480</item>
-    </array>
-    <array name="list_of_video_sizes_h263">
+    </string-array>
+    <string-array name="list_of_video_sizes_h263">
         <item>128x96</item>
         <item>176x144</item>
         <item>352x288</item>
         <item>704x576</item>
         <item>1408x1152</item>
-    </array>
-    <array name="message_recipient_actions_add">
+    </string-array>
+    <string-array name="message_recipient_actions_add">
         <item>@string/menu_action_remove</item>
         <item>@string/menu_action_edit</item>
-    </array>
-    <array name="message_recipient_actions_view">
+    </string-array>
+    <string-array name="message_recipient_actions_view">
         <item>@string/menu_action_remove</item>
         <item>@string/menu_action_edit</item>
-    </array>
-    <array name="messaging_protocol">
+    </string-array>
+    <string-array name="messaging_protocol">
         <item>@string/preference_sms_protocol_sip</item>
         <item>@string/preference_sms_protocol_sms</item>
-    </array>
-    <array name="nat_traversal_mode">
+    </string-array>
+    <string-array name="nat_traversal_mode">
         <item>@string/preference_nat_traversal_mode_local</item>
         <item>@string/preference_nat_traversal_mode_sip</item>
-    </array>
-    <array name="preference_outgoing_calls">
+    </string-array>
+    <string-array name="preference_outgoing_calls">
         <item>@string/preference_call_outgoing_vtow</item>
         <item>@string/preference_call_outgoing_native</item>
         <item>@string/preference_call_outgoing_ask</item>
-    </array>
-    <array name="preference_tracing_levels">
+    </string-array>
+    <string-array name="preference_tracing_levels">
         <item>@string/tracing_off</item>
         <item>@string/tracing_errors</item>
         <item>@string/tracing_full</item>
-    </array>
-    <array name="provisioningExceptions">
+    </string-array>
+    <string-array name="provisioningExceptions">
         <item>@string/activation_exception_ok</item>
         <item>@string/activation_exception_unavailable</item>
         <item>@string/activation_exception_no_record</item>
@@ -292,45 +292,45 @@
         <item>@string/activation_exception_ocsp_no_resp_not_reach</item>
         <item>@string/activation_exception_invalid_request</item>
         <item>@string/activation_exception_imsi_mismatch</item>
-    </array>
-    <array name="reject_call_sms_texts">
+    </string-array>
+    <string-array name="reject_call_sms_texts">
         <item>@string/incoming_reject_sms_1</item>
         <item>@string/incoming_reject_sms_2</item>
         <item>@string/incoming_reject_sms_3</item>
         <item>@string/incoming_reject_sms_4</item>
         <item>@string/incoming_reject_sms_5</item>
-    </array>
-    <array name="sip_uri_format">
+    </string-array>
+    <string-array name="sip_uri_format">
         <item>@string/preference_sip_uri_format_tel</item>
         <item>@string/preference_sip_uri_format_sip</item>
-    </array>
-    <array name="sms_enc_intl_numbers">
+    </string-array>
+    <string-array name="sms_enc_intl_numbers">
         <item>@string/preference_sms_intl_num_enc_strip_plus</item>
         <item>@string/preference_sms_intl_num_enc_keep_plus</item>
         <item>@string/preference_sms_intl_num_enc_unknown</item>
-    </array>
-    <array name="sms_enc_nat_numbers">
+    </string-array>
+    <string-array name="sms_enc_nat_numbers">
         <item>@string/preference_sms_nat_num_enc_strip_0</item>
         <item>@string/preference_sms_nat_num_enc_keep_0</item>
         <item>@string/preference_sms_nat_num_enc_unknown</item>
-    </array>
-    <array name="srtp_auth_type">
+    </string-array>
+    <string-array name="srtp_auth_type">
         <item>@string/preference_srtp_auth_32</item>
         <item>@string/preference_srtp_auth_80</item>
-    </array>
-    <array name="srtp_encryption_type">
+    </string-array>
+    <string-array name="srtp_encryption_type">
         <item>@string/preference_srtp_encryption_aes128</item>
-    </array>
-    <array name="srtp_mode">
+    </string-array>
+    <string-array name="srtp_mode">
         <item>@string/value_disabled</item>
         <item>@string/value_enabled</item>
         <item>@string/value_mandatory</item>
-    </array>
-    <array name="stun_query_mode">
+    </string-array>
+    <string-array name="stun_query_mode">
         <item>@string/preference_stun_query_short</item>
         <item>@string/preference_stun_query_complete</item>
-    </array>
-    <array name="text_templates">
+    </string-array>
+    <string-array name="text_templates">
         <item>@string/text_template_1</item>
         <item>@string/text_template_2</item>
         <item>@string/text_template_3</item>
@@ -343,14 +343,14 @@
         <item>@string/text_template_10</item>
         <item>@string/text_template_11</item>
         <item>@string/text_template_12</item>
-    </array>
-    <array name="transport_protocol">
+    </string-array>
+    <string-array name="transport_protocol">
         <item>@string/preference_sip_transport_tcp</item>
         <item>@string/preference_sip_transport_udp</item>
         <item>@string/preference_sip_transport_tls</item>
-    </array>
-    <array name="vvm_download_mode">
+    </string-array>
+    <string-array name="vvm_download_mode">
         <item>@string/preference_vvm_download_wifi_and_cellular</item>
         <item>@string/preference_vvm_download_wifi</item>
-    </array>
+    </string-array>
 </resources>

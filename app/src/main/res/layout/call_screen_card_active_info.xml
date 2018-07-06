@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@g/call_screen_active_call_layout" android:layout_above="@g/call_screen_end_call_button" style="@style/Layout.WrapHeight">
-    <ImageView android:id="@g/call_screen_active_contact_photo" android:contentDescription="@k/cd_incall_avatar" style="@style/CallScreen.ContactPhoto"/>
-    <FrameLayout android:id="@g/call_screen_active_contact_info_layout_frame" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_alignParentTop="true">
-        <LinearLayout android:orientation="horizontal" android:id="@g/seekBarLayout" android:background="@e/black" android:padding="5dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="1">
-            <ImageView android:id="@g/ringer_image" android:layout_width="0dp" android:layout_height="wrap_content" android:src="@f/ic_social_notifications" android:layout_weight="0.1" android:contentDescription="@k/volume_seekbar_text"/>
-            <SeekBar android:theme="@style/AppTheme" android:id="@g/volumeSeekBar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.9"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@+id/call_screen_active_call_layout" android:layout_above="@id/call_screen_end_call_button" style="@style/Layout.WrapHeight">
+    <ImageView android:id="@+id/call_screen_active_contact_photo" android:contentDescription="@string/cd_incall_avatar" style="@style/CallScreen.ContactPhoto"/>
+    <FrameLayout android:id="@+id/call_screen_active_contact_info_layout_frame" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_alignParentTop="true">
+        <LinearLayout android:orientation="horizontal" android:id="@+id/seekBarLayout" android:background="@color/black" android:padding="5dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="1">
+            <ImageView android:id="@+id/ringer_image" android:layout_width="0dp" android:layout_height="wrap_content" android:src="@drawable/ic_social_notifications" android:layout_weight="0.1" android:contentDescription="@string/volume_seekbar_text"/>
+            <SeekBar android:theme="@style/AppTheme" android:id="@+id/volumeSeekBar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.9"/>
         </LinearLayout>
-        <RelativeLayout android:id="@g/call_screen_active_contact_info_layout" style="@style/CallScreen.ContactInfoLayout">
-            <TextView android:id="@g/call_screen_active_contact_name" android:text="@k/call_log_name_hint" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" style="@style/CallScreen.ContactTextView"/>
-            <TextView android:id="@g/call_screen_active_contact_number" android:text="@k/call_log_number_hint" android:layout_toLeftOf="@g/call_screen_active_call_duration" android:layout_below="@g/call_screen_active_contact_name" android:layout_alignParentLeft="true" style="@style/CallScreen.ContactTextView"/>
-            <TextView android:id="@g/call_screen_active_call_duration" android:text="@k/call_details_duration_hint" android:layout_below="@g/call_screen_active_contact_name" android:layout_alignParentRight="true" style="@style/CallScreen.ContactTextView"/>
+        <RelativeLayout android:id="@+id/call_screen_active_contact_info_layout" style="@style/CallScreen.ContactInfoLayout">
+            <TextView android:id="@+id/call_screen_active_contact_name" android:text="@string/call_log_name_hint" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" style="@style/CallScreen.ContactTextView"/>
+            <TextView android:id="@+id/call_screen_active_contact_number" android:text="@string/call_log_number_hint" android:layout_toLeftOf="@id/call_screen_active_call_duration" android:layout_below="@id/call_screen_active_contact_name" android:layout_alignParentLeft="true" style="@style/CallScreen.ContactTextView"/>
+            <TextView android:id="@+id/call_screen_active_call_duration" android:text="@string/call_details_duration_hint" android:layout_below="@id/call_screen_active_contact_name" android:layout_alignParentRight="true" style="@style/CallScreen.ContactTextView"/>
         </RelativeLayout>
     </FrameLayout>
-    <TextView android:id="@g/call_screen_active_call_status" android:text="@k/call_screen_status_dialing" android:layout_below="@g/call_screen_active_contact_info_layout_frame" style="@style/CallScreen.CallStatusTextView"/>
+    <TextView android:id="@+id/call_screen_active_call_status" android:text="@string/call_screen_status_dialing" android:layout_below="@id/call_screen_active_contact_info_layout_frame" style="@style/CallScreen.CallStatusTextView"/>
 </RelativeLayout>

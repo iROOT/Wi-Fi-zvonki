@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@e/screen_background" android:layout_width="match_parent" android:layout_height="match_parent">
-    <include android:layout_width="wrap_content" android:layout_height="wrap_content" layout="@h/message_recipients_fragment"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@color/screen_background" android:layout_width="match_parent" android:layout_height="match_parent">
+    <include android:layout_width="wrap_content" android:layout_height="wrap_content" layout="@layout/message_recipients_fragment"/>
     <FrameLayout android:layout_height="0dp" android:layout_weight="1" style="@style/Layout.Fill">
-        <ProgressBar android:layout_gravity="center" android:id="@g/progressBar" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
-        <com.mavenir.android.view.AutoScrollListView android:id="@android:id/list" android:cacheColorHint="@e/transparent" android:divider="@e/transparent" android:dividerHeight="5dp" style="@style/Layout.Fill"/>
-        <TextView android:textStyle="italic" android:textColor="@e/white" android:gravity="center_vertical" android:layout_gravity="bottom" android:id="@g/typing_indicator" android:padding="5dp" android:visibility="gone" android:drawablePadding="3dp" style="@style/Layout.WrapHeight"/>
+        <ProgressBar android:layout_gravity="center" android:id="@+id/progressBar" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+        <com.mavenir.android.view.AutoScrollListView android:id="@android:id/list" android:cacheColorHint="@color/transparent" android:divider="@color/transparent" android:dividerHeight="5dp" style="@style/Layout.Fill"/>
+        <TextView android:textStyle="italic" android:textColor="@color/white" android:gravity="center_vertical" android:layout_gravity="bottom" android:id="@+id/typing_indicator" android:padding="5dp" android:visibility="gone" android:drawablePadding="3dp" style="@style/Layout.WrapHeight"/>
     </FrameLayout>
-    <include android:layout_width="wrap_content" android:layout_height="wrap_content" layout="@h/message_compose_fragment"/>
+    <include android:layout_width="wrap_content" android:layout_height="wrap_content" layout="@layout/message_compose_fragment"/>
 </LinearLayout>

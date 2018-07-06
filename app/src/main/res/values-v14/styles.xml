@@ -218,7 +218,7 @@
     <style name="Widget.Main.ActionBar">
         <item name="android:progressBarStyle">@style/Widget.Main.ProgressBar.Horizontal</item>
         <item name="android:background">@drawable/actionbar_solid</item>
-        <item name="android:displayOptions">a</item>
+        <!--<item name="android:displayOptions">a</item>-->
         <item name="android:titleTextStyle">@style/TextAppearance.Main.Widget.ActionBar.Title</item>
         <item name="android:subtitleTextStyle">@style/TextAppearance.Main.Widget.ActionBar.Subtitle</item>
         <item name="android:backgroundStacked">@drawable/actionbar_solid_stacked</item>

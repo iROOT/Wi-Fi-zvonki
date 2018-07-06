@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_gravity="bottom" android:orientation="vertical" android:background="@android:color/transparent" style="@style/Layout.Fill">
-    <View android:id="@g/fakeTransparentView" android:background="@android:color/transparent" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
-    <LinearLayout android:orientation="vertical" android:id="@g/listviewContainer" android:background="@e/dialer_list_background" android:visibility="gone" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <ListView android:id="@g/contactListView" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="@null" android:importantForAccessibility="noHideDescendants"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/emptyTextView" android:layout_width="match_parent" android:layout_height="match_parent" android:text="@k/status_no_matches"/>
+    <View android:id="@+id/fakeTransparentView" android:background="@android:color/transparent" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/listviewContainer" android:background="@color/dialer_list_background" android:visibility="gone" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <ListView android:id="@+id/contactListView" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="@null" android:importantForAccessibility="noHideDescendants"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@+id/emptyTextView" android:layout_width="match_parent" android:layout_height="match_parent" android:text="@string/status_no_matches"/>
     </LinearLayout>
-    <LinearLayout android:orientation="vertical" android:background="@e/dialer_background" style="@style/Layout.Wrap">
-        <EditText android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="@dimen/dialer_text_size" android:textColorHint="@e/dialer_text_color" android:gravity="right|center_vertical|center_horizontal|center|end" android:id="@g/numberEditText" android:focusable="false" android:focusableInTouchMode="false" android:clickable="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone">
+    <LinearLayout android:orientation="vertical" android:background="@color/dialer_background" style="@style/Layout.Wrap">
+        <EditText android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="@dimen/dialer_text_size" android:textColorHint="@color/dialer_text_color" android:gravity="right|center_vertical|center_horizontal|center|end" android:id="@+id/numberEditText" android:focusable="false" android:focusableInTouchMode="false" android:clickable="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="phone">
             <requestFocus/>
         </EditText>
-        <View android:id="@g/separator1" style="@style/Dialpad.HorizontalDividerStyle"/>
-        <include layout="@h/dialpad_layout"/>
-        <View android:id="@g/separator2" style="@style/Dialpad.HorizontalDividerStyle"/>
+        <View android:id="@+id/separator1" style="@style/Dialpad.HorizontalDividerStyle"/>
+        <include layout="@layout/dialpad_layout"/>
+        <View android:id="@+id/separator2" style="@style/Dialpad.HorizontalDividerStyle"/>
         <LinearLayout android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content">
-            <ImageButton android:id="@g/addContactButton" android:padding="10dp" android:src="@f/ic_action_new_gray" android:contentDescription="@k/cd_dialpad_add_button" style="@style/Button.Light"/>
-            <View android:id="@g/separator3" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" style="@style/Dialpad.VerticalDividerStyle"/>
-            <ImageButton android:id="@g/initiateAudioCallButton" android:padding="10dp" android:src="@f/ic_action_call_gray" android:contentDescription="@k/cd_dialpad_call_button" style="@style/Button.Light"/>
-            <ImageButton android:id="@g/initiateVideoCallButton" android:padding="10dp" android:visibility="gone" android:contentDescription="@k/cd_dialpad_video_call_button" style="@style/Button.Light"/>
-            <View android:id="@g/separator4" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" style="@style/Dialpad.VerticalDividerStyle"/>
-            <ImageButton android:id="@g/clearButton" android:padding="10dp" android:src="@f/ic_action_back_gray" android:contentDescription="@k/cd_dialpad_clear_button" style="@style/Button.Light"/>
+            <ImageButton android:id="@+id/addContactButton" android:padding="10dp" android:src="@drawable/ic_action_new_gray" android:contentDescription="@string/cd_dialpad_add_button" style="@style/Button.Light"/>
+            <View android:id="@+id/separator3" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" style="@style/Dialpad.VerticalDividerStyle"/>
+            <ImageButton android:id="@+id/initiateAudioCallButton" android:padding="10dp" android:src="@drawable/ic_action_call_gray" android:contentDescription="@string/cd_dialpad_call_button" style="@style/Button.Light"/>
+            <ImageButton android:id="@+id/initiateVideoCallButton" android:padding="10dp" android:visibility="gone" android:contentDescription="@string/cd_dialpad_video_call_button" style="@style/Button.Light"/>
+            <View android:id="@+id/separator4" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" style="@style/Dialpad.VerticalDividerStyle"/>
+            <ImageButton android:id="@+id/clearButton" android:padding="10dp" android:src="@drawable/ic_action_back_gray" android:contentDescription="@string/cd_dialpad_clear_button" style="@style/Button.Light"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

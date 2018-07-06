@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/popup_layout" android:layout_width="match_parent" android:layout_height="match_parent" style="@style/Layout.Wrap">
-    <TextView android:id="@g/quick_delete" android:text="@k/quick_delete" android:drawableLeft="@f/ic_action_delete_color" style="@style/QuickButtonsVertical"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@+id/popup_layout" android:layout_width="match_parent" android:layout_height="match_parent" style="@style/Layout.Wrap">
+    <TextView android:id="@+id/quick_delete" android:text="@string/quick_delete" android:drawableLeft="@drawable/ic_action_delete_color" style="@style/QuickButtonsVertical"/>
 </LinearLayout>

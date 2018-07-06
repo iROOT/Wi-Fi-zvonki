@@ -3,8 +3,8 @@
     <item>
         <rotate android:fromDegrees="45" android:toDegrees="45" android:pivotX="-40%" android:pivotY="87%">
             <shape android:shape="rectangle">
-                <stroke android:width="10dp" android:color="@e/message_bubble_received"/>
-                <solid android:color="@e/message_bubble_received"/>
+                <stroke android:width="10dp" android:color="@color/message_bubble_received"/>
+                <solid android:color="@color/message_bubble_received"/>
             </shape>
         </rotate>
     </item>

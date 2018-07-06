@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@g/call_screen_passive_call_layout" android:layout_above="@g/call_screen_end_call_button" style="@style/Layout.WrapHeight">
-    <ImageView android:id="@g/call_screen_passive_contact_photo" android:contentDescription="@k/cd_incall_avatar" style="@style/CallScreen.ContactPhoto"/>
-    <RelativeLayout android:id="@g/call_screen_passive_contact_info_layout" style="@style/CallScreen.ContactInfoLayout">
-        <TextView android:id="@g/call_screen_passive_contact_name" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" style="@style/CallScreen.ContactTextView"/>
-        <TextView android:id="@g/call_screen_passive_contact_number" android:layout_toLeftOf="@g/call_screen_passive_call_duration" android:layout_below="@g/call_screen_passive_contact_name" android:layout_alignParentLeft="true" style="@style/CallScreen.ContactTextView"/>
-        <TextView android:id="@g/call_screen_passive_call_duration" android:text="@k/onHold" android:layout_below="@g/call_screen_passive_contact_name" android:layout_alignParentRight="true" style="@style/CallScreen.ContactTextView"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@+id/call_screen_passive_call_layout" android:layout_above="@id/call_screen_end_call_button" style="@style/Layout.WrapHeight">
+    <ImageView android:id="@+id/call_screen_passive_contact_photo" android:contentDescription="@string/cd_incall_avatar" style="@style/CallScreen.ContactPhoto"/>
+    <RelativeLayout android:id="@+id/call_screen_passive_contact_info_layout" style="@style/CallScreen.ContactInfoLayout">
+        <TextView android:id="@+id/call_screen_passive_contact_name" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" style="@style/CallScreen.ContactTextView"/>
+        <TextView android:id="@+id/call_screen_passive_contact_number" android:layout_toLeftOf="@id/call_screen_passive_call_duration" android:layout_below="@id/call_screen_passive_contact_name" android:layout_alignParentLeft="true" style="@style/CallScreen.ContactTextView"/>
+        <TextView android:id="@+id/call_screen_passive_call_duration" android:text="@string/onHold" android:layout_below="@id/call_screen_passive_contact_name" android:layout_alignParentRight="true" style="@style/CallScreen.ContactTextView"/>
     </RelativeLayout>
-    <TextView android:id="@g/call_screen_passive_call_status" android:visibility="gone" android:text="@k/call_screen_status_dialing" android:layout_below="@g/call_screen_passive_contact_info_layout" style="@style/CallScreen.CallStatusTextView"/>
+    <TextView android:id="@+id/call_screen_passive_call_status" android:visibility="gone" android:text="@string/call_screen_status_dialing" android:layout_below="@id/call_screen_passive_contact_info_layout" style="@style/CallScreen.CallStatusTextView"/>
 </RelativeLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:orientation="vertical" android:padding="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@g/topicTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@k/help_topic_activation"/>
-        <View android:id="@g/separatorView" android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="5dp" android:layout_marginBottom="5dp"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/contentTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@k/help_text_activation"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/topicTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/help_topic_activation"/>
+        <View android:id="@+id/separatorView" android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="5dp" android:layout_marginBottom="5dp"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/contentTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/help_text_activation"/>
     </LinearLayout>
 </ScrollView>

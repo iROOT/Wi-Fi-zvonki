@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" style="@style/Layout.WrapHeight">
-    <LinearLayout android:id="@g/call_screen_manage_conference_button" android:visibility="gone" style="@style/CallScreen.ConferenceButtonLayout">
-        <ImageButton android:id="@g/manageConferenceButtonImage" android:clickable="false" android:src="@f/ic_action_group" android:contentDescription="@k/cd_incall_manage_conference" style="@style/CallScreen.ConferenceButton"/>
-        <TextView android:id="@g/manageConferenceButtonLabel" android:text="@k/cd_incall_manage_conference" style="@style/CallScreen.ConferenceButtonLabel"/>
+    <LinearLayout android:id="@+id/call_screen_manage_conference_button" android:visibility="gone" style="@style/CallScreen.ConferenceButtonLayout">
+        <ImageButton android:id="@+id/manageConferenceButtonImage" android:clickable="false" android:src="@drawable/ic_action_group" android:contentDescription="@string/cd_incall_manage_conference" style="@style/CallScreen.ConferenceButton"/>
+        <TextView android:id="@+id/manageConferenceButtonLabel" android:text="@string/cd_incall_manage_conference" style="@style/CallScreen.ConferenceButtonLabel"/>
     </LinearLayout>
-    <ImageButton android:id="@g/call_screen_video_on_button" android:background="@android:color/transparent" android:visibility="gone" android:contentDescription="@k/cd_incall_end_call" style="@style/CallScreen.Button"/>
-    <ImageButton android:id="@g/call_screen_end_call_button" android:contentDescription="@k/cd_incall_end_call" style="@style/CallScreen.EndCallButton"/>
-    <LinearLayout android:id="@g/call_controls" style="@style/CallScreen.CallControlLayout">
-        <ToggleButton android:id="@g/call_screen_dialpad_button" android:background="@f/btn_compound_dialpad" android:contentDescription="@k/cd_incall_show_dialpad" style="@style/CallScreen.ToggleButton"/>
-        <ToggleButton android:id="@g/call_screen_speaker_button" android:background="@f/btn_compound_speaker" android:contentDescription="@k/cd_incall_speaker" style="@style/CallScreen.ToggleButton"/>
-        <ToggleButton android:id="@g/call_screen_bluetooth_button" android:background="@f/btn_compound_bluetooth" android:visibility="gone" android:contentDescription="@k/cd_incall_bluetooth" style="@style/CallScreen.ToggleButton"/>
-        <ToggleButton android:id="@g/call_screen_mute_button" android:background="@f/btn_compound_mute" android:contentDescription="@k/cd_incall_mute" style="@style/CallScreen.ToggleButton"/>
-        <ToggleButton android:id="@g/call_screen_hold_button" android:background="@f/btn_compound_hold" android:visibility="gone" android:contentDescription="@k/cd_incall_hold" style="@style/CallScreen.ToggleButton"/>
-        <ImageButton android:id="@g/call_screen_add_call_button" android:visibility="gone" android:src="@f/ic_action_user_add" android:contentDescription="@k/cd_incall_add_call" style="@style/CallScreen.Button"/>
-        <ImageButton android:id="@g/call_screen_add_participant_button" android:visibility="gone" android:src="@f/ic_action_user_add" android:contentDescription="@k/cd_incall_add_call" style="@style/CallScreen.Button"/>
-        <ImageButton android:id="@g/call_screen_swap_button" android:visibility="gone" android:src="@f/ic_action_refresh" android:contentDescription="@k/cd_incall_swap_calls" style="@style/CallScreen.Button"/>
-        <ImageButton android:id="@g/call_screen_merge_button" android:visibility="gone" android:fitsSystemWindows="true" android:src="@f/ic_action_merge" android:contentDescription="@k/cd_incall_merge_calls" style="@style/CallScreen.Button"/>
-        <ImageButton android:id="@g/call_screen_qos_button" android:visibility="gone" android:src="@f/ic_action_qos" android:contentDescription="@k/cd_incall_qos" style="@style/CallScreen.Button"/>
-        <ImageButton android:id="@g/call_screen_share_button" android:visibility="gone" android:contentDescription="@k/cd_incall_share" style="@style/CallScreen.Button"/>
+    <ImageButton android:id="@+id/call_screen_video_on_button" android:background="@android:color/transparent" android:visibility="gone" android:contentDescription="@string/cd_incall_end_call" style="@style/CallScreen.Button"/>
+    <ImageButton android:id="@+id/call_screen_end_call_button" android:contentDescription="@string/cd_incall_end_call" style="@style/CallScreen.EndCallButton"/>
+    <LinearLayout android:id="@+id/call_controls" style="@style/CallScreen.CallControlLayout">
+        <ToggleButton android:id="@+id/call_screen_dialpad_button" android:background="@drawable/btn_compound_dialpad" android:contentDescription="@string/cd_incall_show_dialpad" style="@style/CallScreen.ToggleButton"/>
+        <ToggleButton android:id="@+id/call_screen_speaker_button" android:background="@drawable/btn_compound_speaker" android:contentDescription="@string/cd_incall_speaker" style="@style/CallScreen.ToggleButton"/>
+        <ToggleButton android:id="@+id/call_screen_bluetooth_button" android:background="@drawable/btn_compound_bluetooth" android:visibility="gone" android:contentDescription="@string/cd_incall_bluetooth" style="@style/CallScreen.ToggleButton"/>
+        <ToggleButton android:id="@+id/call_screen_mute_button" android:background="@drawable/btn_compound_mute" android:contentDescription="@string/cd_incall_mute" style="@style/CallScreen.ToggleButton"/>
+        <ToggleButton android:id="@+id/call_screen_hold_button" android:background="@drawable/btn_compound_hold" android:visibility="gone" android:contentDescription="@string/cd_incall_hold" style="@style/CallScreen.ToggleButton"/>
+        <ImageButton android:id="@+id/call_screen_add_call_button" android:visibility="gone" android:src="@drawable/ic_action_user_add" android:contentDescription="@string/cd_incall_add_call" style="@style/CallScreen.Button"/>
+        <ImageButton android:id="@+id/call_screen_add_participant_button" android:visibility="gone" android:src="@drawable/ic_action_user_add" android:contentDescription="@string/cd_incall_add_call" style="@style/CallScreen.Button"/>
+        <ImageButton android:id="@+id/call_screen_swap_button" android:visibility="gone" android:src="@drawable/ic_action_refresh" android:contentDescription="@string/cd_incall_swap_calls" style="@style/CallScreen.Button"/>
+        <ImageButton android:id="@+id/call_screen_merge_button" android:visibility="gone" android:fitsSystemWindows="true" android:src="@drawable/ic_action_merge" android:contentDescription="@string/cd_incall_merge_calls" style="@style/CallScreen.Button"/>
+        <ImageButton android:id="@+id/call_screen_qos_button" android:visibility="gone" android:src="@drawable/ic_action_qos" android:contentDescription="@string/cd_incall_qos" style="@style/CallScreen.Button"/>
+        <ImageButton android:id="@+id/call_screen_share_button" android:visibility="gone" android:contentDescription="@string/cd_incall_share" style="@style/CallScreen.Button"/>
     </LinearLayout>
 </LinearLayout>

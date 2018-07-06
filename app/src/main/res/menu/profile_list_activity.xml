@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@f/ic_action_new" android:id="@g/menuProfileNew" android:title="@k/menu_profile_new" custom:showAsAction="always"/>
-    <item android:icon="@f/ic_action_copy" android:id="@g/menuProfileCopy" android:title="@k/menu_profile_copy" custom:showAsAction="always"/>
-    <item android:icon="@f/ic_action_delete" android:id="@g/menuProfileDelete" android:title="@k/menu_profile_delete" custom:showAsAction="always"/>
+    <item android:icon="@drawable/ic_action_new" android:id="@+id/menuProfileNew" android:title="@string/menu_profile_new" custom:showAsAction="always"/>
+    <item android:icon="@drawable/ic_action_copy" android:id="@+id/menuProfileCopy" android:title="@string/menu_profile_copy" custom:showAsAction="always"/>
+    <item android:icon="@drawable/ic_action_delete" android:id="@+id/menuProfileDelete" android:title="@string/menu_profile_delete" custom:showAsAction="always"/>
 </menu>

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginTop="48dp" android:layout_marginBottom="48dp" android:overScrollMode="ifContentScrolls">
     <RelativeLayout android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content">
         <TextView android:textColor="?android:attr/textColorPrimary" android:id="@android:id/message" android:layout_width="match_parent" android:layout_height="wrap_content" style="?android:attr/textAppearanceMedium"/>
-        <LinearLayout android:orientation="vertical" android:id="@g/edittext_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toLeftOf="@g/chooseNumberButton" android:layout_below="@android:id/message"/>
-        <ImageButton android:id="@g/chooseNumberButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@f/ic_action_user" android:layout_below="@android:id/message" android:layout_alignParentRight="true"/>
+        <LinearLayout android:orientation="vertical" android:id="@+id/edittext_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toLeftOf="@id/chooseNumberButton" android:layout_below="@android:id/message"/>
+        <ImageButton android:id="@+id/chooseNumberButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_action_user" android:layout_below="@android:id/message" android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </ScrollView>

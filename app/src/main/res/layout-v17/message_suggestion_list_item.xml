@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:background="@f/listview_row_selected" android:padding="5dp" style="@style/Layout.WrapHeight">
-    <RelativeLayout android:id="@g/AvatarLayout" style="@style/Layout.Wrap">
-        <ImageView android:id="@g/avatar_image" android:background="@f/avatar_background" android:layout_width="55dp" android:layout_height="55dp" android:layout_centerInParent="true" android:contentDescription="@k/cd_contacts_avatar"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/avatar_initials" android:text="@k/call_log_avatar_initials_hint" android:maxLength="2" android:layout_centerInParent="true" style="@style/Layout.Wrap"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:background="@drawable/listview_row_selected" android:padding="5dp" style="@style/Layout.WrapHeight">
+    <RelativeLayout android:id="@+id/AvatarLayout" style="@style/Layout.Wrap">
+        <ImageView android:id="@+id/avatar_image" android:background="@drawable/avatar_background" android:layout_width="55dp" android:layout_height="55dp" android:layout_centerInParent="true" android:contentDescription="@string/cd_contacts_avatar"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/avatar_initials" android:text="@string/call_log_avatar_initials_hint" android:maxLength="2" android:layout_centerInParent="true" style="@style/Layout.Wrap"/>
     </RelativeLayout>
-    <LinearLayout android:orientation="vertical" android:layout_toRightOf="@g/AvatarLayout" android:layout_centerVertical="true" android:layout_toEndOf="@g/AvatarLayout" style="@style/Layout.WrapHeight">
-        <TextView android:id="@g/list_item_title" style="@style/ListItemTitleStyle"/>
-        <TextView android:id="@g/list_item_number" style="@style/ListItemSubTitleStyle"/>
+    <LinearLayout android:orientation="vertical" android:layout_toRightOf="@id/AvatarLayout" android:layout_centerVertical="true" android:layout_toEndOf="@id/AvatarLayout" style="@style/Layout.WrapHeight">
+        <TextView android:id="@+id/list_item_title" style="@style/ListItemTitleStyle"/>
+        <TextView android:id="@+id/list_item_number" style="@style/ListItemSubTitleStyle"/>
     </LinearLayout>
 </RelativeLayout>

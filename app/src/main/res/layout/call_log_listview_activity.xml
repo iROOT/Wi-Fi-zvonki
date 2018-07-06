@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" style="@style/Layout.Fill">
-    <RadioGroup android:gravity="center" android:orientation="horizontal" android:id="@g/filterRadioGroup" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginTop="10dp" android:layout_marginRight="20dp" android:layout_marginBottom="10dp">
-        <RadioButton android:id="@g/call_log_all_radio" android:checked="true" android:text="@k/call_log_radio_all" android:contentDescription="@k/cd_call_log_all_calls" style="@style/RadioTabLeftStyle"/>
-        <RadioButton android:id="@g/call_log_missed_radio" android:text="@k/call_log_radio_missed" android:contentDescription="@k/cd_call_log_missed_calls" style="@style/RadioTabRightStyle"/>
+    <RadioGroup android:gravity="center" android:orientation="horizontal" android:id="@+id/filterRadioGroup" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginTop="10dp" android:layout_marginRight="20dp" android:layout_marginBottom="10dp">
+        <RadioButton android:id="@+id/call_log_all_radio" android:checked="true" android:text="@string/call_log_radio_all" android:contentDescription="@string/cd_call_log_all_calls" style="@style/RadioTabLeftStyle"/>
+        <RadioButton android:id="@+id/call_log_missed_radio" android:text="@string/call_log_radio_missed" android:contentDescription="@string/cd_call_log_missed_calls" style="@style/RadioTabRightStyle"/>
     </RadioGroup>
     <ListView android:id="@android:id/list" android:scrollbars="vertical" android:fadingEdge="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:cacheColorHint="#00000000" android:divider="@null" android:fastScrollEnabled="true"/>
 </LinearLayout>

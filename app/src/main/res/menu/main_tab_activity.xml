@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@f/ic_action_call" android:id="@g/menu_return_to_call" android:visible="false" android:orderInCategory="10" android:title="@k/menu_return_to_call" custom:showAsAction="always"/>
-    <item android:id="@g/menu_whitelist" android:visible="false" android:orderInCategory="1020" android:title="@k/menu_whitelist" custom:showAsAction="never"/>
-    <item android:id="@g/menu_settings" android:orderInCategory="1020" android:title="@k/menu_preferences" custom:showAsAction="never"/>
-    <item android:id="@g/menu_echo_test" android:orderInCategory="1020" android:title="@k/menu_echo_test" custom:showAsAction="never"/>
-    <item android:id="@g/menu_help" android:orderInCategory="1030" android:title="@k/menu_help" custom:showAsAction="never"/>
-    <item android:id="@g/menu_about" android:orderInCategory="1030" android:title="@k/menu_about" custom:showAsAction="never"/>
-    <item android:id="@g/menu_exit" android:orderInCategory="10000" android:title="@k/menu_exit" custom:showAsAction="never"/>
+    <item android:icon="@drawable/ic_action_call" android:id="@+id/menu_return_to_call" android:visible="false" android:orderInCategory="10" android:title="@string/menu_return_to_call" custom:showAsAction="always"/>
+    <item android:id="@+id/menu_whitelist" android:visible="false" android:orderInCategory="1020" android:title="@string/menu_whitelist" custom:showAsAction="never"/>
+    <item android:id="@+id/menu_settings" android:orderInCategory="1020" android:title="@string/menu_preferences" custom:showAsAction="never"/>
+    <item android:id="@+id/menu_echo_test" android:orderInCategory="1020" android:title="@string/menu_echo_test" custom:showAsAction="never"/>
+    <item android:id="@+id/menu_help" android:orderInCategory="1030" android:title="@string/menu_help" custom:showAsAction="never"/>
+    <item android:id="@+id/menu_about" android:orderInCategory="1030" android:title="@string/menu_about" custom:showAsAction="never"/>
+    <item android:id="@+id/menu_exit" android:orderInCategory="10000" android:title="@string/menu_exit" custom:showAsAction="never"/>
 </menu>

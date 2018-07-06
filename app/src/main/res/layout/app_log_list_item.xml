@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <TextView android:textColor="@e/app_main" android:id="@g/appLogTimestampTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_dev_app_log_column_time_hint"/>
-    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/appLogMessageTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/preference_dev_app_log_column_event_hint"/>
+    <TextView android:textColor="@color/app_main" android:id="@+id/appLogTimestampTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_dev_app_log_column_time_hint"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/appLogMessageTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preference_dev_app_log_column_event_hint"/>
 </LinearLayout>
