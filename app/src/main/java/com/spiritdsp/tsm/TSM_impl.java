@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.View;
-import com.fgmicrotec.mobile.android.fgmag.VoIP;
-import com.spiritdsp.tsm.d.a;
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgent.Builder;
+import com.spiritdsp.tsm.TSM.Option;
+import org.acra.ACRAConstants;
 
-class TSM_impl implements d {
+class TSM_impl implements TSM {
+    private static boolean AnalyticsInitialized = false;
     static final int SPIRIT_VIDEO_FORMAT_BGR24 = 5;
     static final int SPIRIT_VIDEO_FORMAT_GRAYSCALE = 10;
     static final int SPIRIT_VIDEO_FORMAT_RGB24 = 6;
@@ -107,13 +110,13 @@ class TSM_impl implements d {
     static {
         boolean z;
         boolean z2 = true;
-        if (mDeviceID == VoIP.REASON_CODE_GONE || mDeviceID == 413 || mDeviceID == VoIP.REASON_CODE_CONFLICT || mDeviceID == 414) {
+        if (mDeviceID == 410 || mDeviceID == 413 || mDeviceID == 409 || mDeviceID == 414) {
             z = true;
         } else {
             z = false;
         }
         mIsGalaxyS2 = z;
-        if (mDeviceID == VoIP.REASON_CODE_CONFLICT || mDeviceID == 413) {
+        if (mDeviceID == 409 || mDeviceID == 413) {
             z = true;
         } else {
             z = false;
@@ -215,13 +218,13 @@ class TSM_impl implements d {
             z = false;
         }
         mIsKarbonnTAFone = z;
-        if (mDeviceID == 3000) {
+        if (mDeviceID == ACRAConstants.DEFAULT_CONNECTION_TIMEOUT) {
             z = true;
         } else {
             z = false;
         }
         mIsHuaweiAscend = z;
-        if (mDeviceID == VoIP.REASON_CODE_SERVER_NOT_IMPLEMENTED) {
+        if (mDeviceID == 501) {
             z = true;
         } else {
             z = false;
@@ -515,66 +518,72 @@ class TSM_impl implements d {
         mIsHTCOne = z2;
     }
 
-    public TSM_impl(Activity activity) {
+    public TSM_impl(Activity act) {
         Logging.LogPrint("TSM:<init>", new Object[0]);
         log_build_info();
-        if (!("1.0.2.952".equals("local") || "".equals("local"))) {
-            String str;
-            if (!_get_dll_version().equals("1.0.2.952") && !_is_dll_voice_only()) {
-                str = "ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.952";
-                Logging.LogPrint("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.952", new Object[0]);
-                Logging.LogNativePrintErr("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.952", new Object[0]);
-                throw new Error("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.952");
-            } else if (!_get_dll_version().equals("") && _is_dll_voice_only()) {
-                str = "ERROR: Media Manager SO doesn't match jar! Expected version = ";
-                Logging.LogPrint("ERROR: Media Manager SO doesn't match jar! Expected version = ", new Object[0]);
-                Logging.LogNativePrintErr("ERROR: Media Manager SO doesn't match jar! Expected version = ", new Object[0]);
-                throw new Error("ERROR: Media Manager SO doesn't match jar! Expected version = ");
+        if (!(DllVersion.DLL_VERSION.equals("local") || DllVersion.DLL_VERSION_VOICE.equals("local"))) {
+            String err;
+            if (!_get_dll_version().equals(DllVersion.DLL_VERSION) && !_is_dll_voice_only()) {
+                err = "ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.984";
+                Logging.LogPrint("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.984", new Object[0]);
+                Logging.LogNativePrintErr("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.984", new Object[0]);
+                throw new Error("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.984");
+            } else if (!_get_dll_version().equals(DllVersion.DLL_VERSION_VOICE) && _is_dll_voice_only()) {
+                err = "ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.959";
+                Logging.LogPrint("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.959", new Object[0]);
+                Logging.LogNativePrintErr("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.959", new Object[0]);
+                throw new Error("ERROR: Media Manager SO doesn't match jar! Expected version = 1.0.2.959");
             }
         }
         this.mDM = new DisplayMetrics();
-        if (activity != null) {
-            setContext(activity);
+        if (act != null) {
+            setContext(act);
         }
     }
 
-    public void setContext(Activity activity) {
-        Logging.LogPrint("TSM:setContext: %h", activity);
-        if (activity == null) {
-            String str = "ERROR: can't setup NULL context!";
+    public void setContext(Activity act) {
+        Logging.LogPrint("TSM:setContext: %h", act);
+        if (act == null) {
+            String err = "ERROR: can't setup NULL context!";
             Logging.LogPrint("ERROR: can't setup NULL context!", new Object[0]);
             Logging.LogNativePrintErr("ERROR: can't setup NULL context!", new Object[0]);
             throw new Error("ERROR: can't setup NULL context!");
         }
-        activity.getWindowManager().getDefaultDisplay().getMetrics(this.mDM);
-        Capture.setActivity(activity);
-        Audio.setContext(activity);
+        if (!AnalyticsInitialized) {
+            AnalyticsInitialized = true;
+            new Builder().build(act.getApplicationContext(), "Q95S3P23G3HH836G7Q72");
+            FlurryAgent.addSessionProperty("Customer", "Default");
+            CloudantAnalytics.OnTsmInit(act);
+        }
+        act.getWindowManager().getDefaultDisplay().getMetrics(this.mDM);
+        CaptureBase.setActivity(act);
+        Audio.setContext(act);
     }
 
-    public void setOption(a aVar, Object obj) {
-        switch (aVar) {
+    public void setOption(Option option, Object value) {
+        switch (option) {
             case EnableAudioVolumeObservation:
-                boolean booleanValue;
-                if (obj instanceof Boolean) {
-                    booleanValue = ((Boolean) obj).booleanValue();
-                } else if (obj instanceof Integer) {
-                    booleanValue = ((Integer) obj).intValue() != 0;
+                boolean enable;
+                if (value instanceof Boolean) {
+                    enable = ((Boolean) value).booleanValue();
+                } else if (value instanceof Integer) {
+                    enable = ((Integer) value).intValue() != 0;
                 } else {
                     throw new IllegalArgumentException("boolean is expected");
                 }
-                Audio.enableAudioVolumeObservation(booleanValue);
+                Audio.enableAudioVolumeObservation(enable);
                 return;
             default:
                 return;
         }
     }
 
-    public View createVideoView(Context context, int... iArr) {
+    public View createVideoView(Context ctx, int... ids) {
         Logging.LogPrint("TSM:createVideoView", new Object[0]);
-        if (context instanceof Activity) {
-            Capture.setActivity((Activity) context);
+        if (ctx instanceof Activity) {
+            CaptureBase.setActivity((Activity) ctx);
         }
-        return new VideoView(context, iArr);
+        return new VideoView(ctx, ids);
     }
 
     private void log_build_info() {

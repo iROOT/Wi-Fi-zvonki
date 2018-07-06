@@ -5,25 +5,25 @@ public class Logging {
 
     static native void LogNativePrint(int i, String str);
 
-    static void LogPrint(String str, Object... objArr) {
-        System.out.println(String.format(str, objArr));
+    static void LogPrint(String fmt, Object... args) {
+        System.out.println(String.format(fmt, args));
     }
 
-    static void LogDebugPrint(boolean z, String str, Object... objArr) {
-        if (z) {
-            LogPrint(str, objArr);
+    static void LogDebugPrint(boolean isDebug, String fmt, Object... args) {
+        if (isDebug) {
+            LogPrint(fmt, args);
         }
     }
 
-    static void LogNativePrint(String str, Object... objArr) {
-        LogFullPrint(contextPtr, String.format(str, objArr));
+    static void LogNativePrint(String fmt, Object... args) {
+        LogFullPrint(contextPtr, String.format(fmt, args));
     }
 
-    static void LogNativePrintErr(String str, Object... objArr) {
-        LogFullPrint(contextPtr, "Error!" + String.format(str, objArr));
+    static void LogNativePrintErr(String fmt, Object... args) {
+        LogFullPrint(contextPtr, "Error!" + String.format(fmt, args));
     }
 
-    static void LogFullPrint(int i, String str) {
+    static void LogFullPrint(int context, String str) {
         System.out.println(str);
     }
 }

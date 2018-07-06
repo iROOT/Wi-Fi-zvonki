@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-public interface d {
+public interface TSM {
 
-    public enum a {
+    public enum Option {
         EnableAudioVolumeObservation
     }
 
@@ -14,5 +14,5 @@ public interface d {
 
     void setContext(Activity activity);
 
-    void setOption(a aVar, Object obj);
+    void setOption(Option option, Object obj);
 }

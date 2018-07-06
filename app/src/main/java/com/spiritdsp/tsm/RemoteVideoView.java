@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+/* compiled from: Render */
 class RemoteVideoView extends GLSurfaceView implements Renderer {
     private final String fragmentShaderCode = "precision mediump float;uniform sampler2D Ytex;uniform sampler2D Utex,Vtex;varying vec2 vTextureCoord;void main(void) {  float nx,ny,r,g,b,y,u,v;  nx=vTextureCoord[0];  ny=vTextureCoord[1];  y=texture2D(Ytex,vec2(nx,ny)).r;  u=texture2D(Utex,vec2(nx,ny)).r;  v=texture2D(Vtex,vec2(nx,ny)).r;  u=u-0.5;  v=v-0.5;  r=y+1.5958*v;  g=y-0.39173*u-0.81290*v;  b=y+2.017*u;  gl_FragColor=vec4(r,g,b,1.0);}";
     private final String fragmentShaderCodeFill = "precision mediump float;uniform vec4 aColor;void main() {  gl_FragColor = aColor;}";
@@ -35,9 +36,9 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
 
     private native void nativeDraw(int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8);
 
-    public RemoteVideoView(Context context, int i) {
-        super(context);
-        this.mtype = i;
+    public RemoteVideoView(Context ctx, int Atype) {
+        super(ctx);
+        this.mtype = Atype;
         Logging.LogDebugPrint(this.isDebug, "RVV:<init> ", new Object[0]);
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(this.mDisplayMetrics);
         Logging.LogDebugPrint(this.isDebug, "RVV:create. tid %d", Integer.valueOf(Process.myTid()));
@@ -50,7 +51,7 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
         setRenderMode(0);
     }
 
-    public void onSurfaceCreated(GL10 gl10, EGLConfig eGLConfig) {
+    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         Logging.LogDebugPrint(this.isDebug, "RVV:onSurfaceCreated", new Object[0]);
         this.mProgram = loadProgramm("attribute vec4 aPosition;attribute vec2 aTextureCoord;varying vec2 vTextureCoord;void main() {  gl_Position = aPosition;  vTextureCoord = aTextureCoord;}", "precision mediump float;uniform sampler2D Ytex;uniform sampler2D Utex,Vtex;varying vec2 vTextureCoord;void main(void) {  float nx,ny,r,g,b,y,u,v;  nx=vTextureCoord[0];  ny=vTextureCoord[1];  y=texture2D(Ytex,vec2(nx,ny)).r;  u=texture2D(Utex,vec2(nx,ny)).r;  v=texture2D(Vtex,vec2(nx,ny)).r;  u=u-0.5;  v=v-0.5;  r=y+1.5958*v;  g=y-0.39173*u-0.81290*v;  b=y+2.017*u;  gl_FragColor=vec4(r,g,b,1.0);}");
         this.mProgramFill = loadProgramm("attribute vec4 aPosition;void main() {  gl_Position = aPosition;}", "precision mediump float;uniform vec4 aColor;void main() {  gl_FragColor = aColor;}");
@@ -62,24 +63,24 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
         return (TSM_impl.mIsGalaxyS2 || TSM_impl.mIsGalaxyNote || TSM_impl.mIsGalaxyAdvance) && VERSION.SDK_INT <= 10;
     }
 
-    public void onSurfaceChanged(GL10 gl10, int i, int i2) {
-        Logging.LogDebugPrint(this.isDebug, "RVV:onSurfaceChanged %dx%d", Integer.valueOf(i), Integer.valueOf(i2));
-        this.mWidth = i;
-        this.mHeight = i2;
-        GLES20.glViewport(0, 0, i, i2);
+    public void onSurfaceChanged(GL10 unused, int w, int h) {
+        Logging.LogDebugPrint(this.isDebug, "RVV:onSurfaceChanged %dx%d", Integer.valueOf(w), Integer.valueOf(h));
+        this.mWidth = w;
+        this.mHeight = h;
+        GLES20.glViewport(0, 0, w, h);
     }
 
-    protected void onWindowVisibilityChanged(int i) {
-        Logging.LogDebugPrint(this.isDebug, "RVV:onWindowVisibilityChanged %d", Integer.valueOf(i));
-        if (i == 0) {
+    protected void onWindowVisibilityChanged(int visibility) {
+        Logging.LogDebugPrint(this.isDebug, "RVV:onWindowVisibilityChanged %d", Integer.valueOf(visibility));
+        if (visibility == 0) {
             onResume();
         } else {
             onPause();
         }
-        super.onWindowVisibilityChanged(i);
+        super.onWindowVisibilityChanged(visibility);
     }
 
-    public void onDrawFrame(GL10 gl10) {
+    public void onDrawFrame(GL10 unused) {
         synchronized (this) {
             if (!this.isAttached || this.mGraphicsContext == 0) {
                 GLES20.glClear(16384);
@@ -120,8 +121,8 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
         super.onDetachedFromWindow();
     }
 
-    public synchronized void externalSetContext(int i) {
-        this.mGraphicsContext = i;
+    public synchronized void externalSetContext(int GraphicsContext) {
+        this.mGraphicsContext = GraphicsContext;
     }
 
     public synchronized void externalUpdateFrame() {
@@ -130,7 +131,7 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
         }
     }
 
-    public synchronized void externalResize(int i, int i2) {
+    public synchronized void externalResize(int w, int h) {
     }
 
     private static void CheckOpenGLError() {
@@ -139,36 +140,36 @@ class RemoteVideoView extends GLSurfaceView implements Renderer {
         }
     }
 
-    private static int loadShader(int i, String str) {
-        int glCreateShader = GLES20.glCreateShader(i);
+    private static int loadShader(int type, String shaderCode) {
+        int shader = GLES20.glCreateShader(type);
         CheckOpenGLError();
-        GLES20.glShaderSource(glCreateShader, str);
+        GLES20.glShaderSource(shader, shaderCode);
         CheckOpenGLError();
-        GLES20.glCompileShader(glCreateShader);
+        GLES20.glCompileShader(shader);
         CheckOpenGLError();
-        int[] iArr = new int[1];
-        GLES20.glGetShaderiv(glCreateShader, 35713, iArr, 0);
+        int[] compiled = new int[1];
+        GLES20.glGetShaderiv(shader, 35713, compiled, 0);
         CheckOpenGLError();
-        if (iArr[0] != 0) {
-            return glCreateShader;
+        if (compiled[0] != 0) {
+            return shader;
         }
         Logging.LogDebugPrint(true, "Could not compile shader:", new Object[0]);
-        Logging.LogDebugPrint(true, GLES20.glGetShaderInfoLog(glCreateShader), new Object[0]);
-        GLES20.glDeleteShader(glCreateShader);
+        Logging.LogDebugPrint(true, GLES20.glGetShaderInfoLog(shader), new Object[0]);
+        GLES20.glDeleteShader(shader);
         return 0;
     }
 
-    private static int loadProgramm(String str, String str2) {
-        int loadShader = loadShader(35633, str);
-        int loadShader2 = loadShader(35632, str2);
-        int glCreateProgram = GLES20.glCreateProgram();
+    private static int loadProgramm(String vShader, String fShader) {
+        int vertexShader = loadShader(35633, vShader);
+        int fragmentShader = loadShader(35632, fShader);
+        int program = GLES20.glCreateProgram();
         CheckOpenGLError();
-        GLES20.glAttachShader(glCreateProgram, loadShader);
+        GLES20.glAttachShader(program, vertexShader);
         CheckOpenGLError();
-        GLES20.glAttachShader(glCreateProgram, loadShader2);
+        GLES20.glAttachShader(program, fragmentShader);
         CheckOpenGLError();
-        GLES20.glLinkProgram(glCreateProgram);
+        GLES20.glLinkProgram(program);
         CheckOpenGLError();
-        return glCreateProgram;
+        return program;
     }
 }
