@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@e/screen_background" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:id="@g/contactImageView" android:layout_width="match_parent" android:layout_height="@dimen/contact_details_avatar_height" android:src="@f/picture_unknown" android:scaleType="centerCrop" android:contentDescription="@k/cd_call_details_avatar"/>
+    <View android:id="@g/separator1" android:background="@e/separator" android:layout_width="match_parent" android:layout_height="@dimen/divider_height_double"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/white" android:id="@g/separatorTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginTop="10dp" android:text="@k/contact_details_phones_title"/>
+    <View android:id="@g/separator2" android:background="@e/separator" android:layout_width="match_parent" android:layout_height="@dimen/divider_height_double"/>
+    <ListView android:id="@android:id/list" android:layout_width="match_parent" android:layout_height="wrap_content" android:divider="@e/separator" android:dividerHeight="@dimen/divider_height"/>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" style="@style/Layout.Fill">
+    <RelativeLayout android:padding="5dp" style="@style/Layout.WrapHeight">
+        <RelativeLayout android:layout_toLeftOf="@g/addImageButton" android:layout_alignParentLeft="true" android:layout_centerVertical="true" style="@style/Layout.WrapHeight">
+            <EditText android:id="@g/numberEditText" android:background="#00000000" android:ems="10" android:layout_toLeftOf="@g/clearNumberImageView" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_centerVertical="true" android:inputType="text" style="@style/Layout.Wrap"/>
+            <ImageView android:id="@g/clearNumberImageView" android:visibility="gone" android:layout_alignParentRight="true" android:layout_centerVertical="true" style="@style/Layout.Wrap"/>
+        </RelativeLayout>
+        <ImageButton android:id="@g/addImageButton" android:layout_marginLeft="10dp" android:layout_alignParentRight="true" android:layout_centerVertical="true" style="@style/Layout.Wrap"/>
+    </RelativeLayout>
+    <ListView android:id="@android:id/list" android:padding="2dp" android:scrollbars="vertical" android:fadingEdge="vertical" android:cacheColorHint="#00000000" android:fastScrollEnabled="true" style="@style/Layout.Wrap"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@g/emptyTextView" android:padding="10dp" android:visibility="gone" android:text="@k/contacts_search_empty" style="@style/Layout.Wrap"/>
+</LinearLayout>

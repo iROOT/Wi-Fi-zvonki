@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_send" android:id="@g/menu_qos_send" android:title="@k/menu_test_ui_qos_send" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_delete" android:id="@g/menu_qos_clear" android:title="@k/menu_test_ui_qos_clear" custom:showAsAction="always"/>
+</menu>

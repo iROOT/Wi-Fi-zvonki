@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_save" android:id="@g/menu_save" android:title="@k/save" custom:showAsAction="always"/>
+</menu>

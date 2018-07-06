@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/popup_layout" android:layout_width="match_parent" android:layout_height="match_parent" style="@style/Layout.Wrap">
+    <TextView android:id="@g/quick_delete" android:text="@k/quick_delete" android:drawableLeft="@f/ic_action_delete_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_forward" android:text="@k/quick_forward" android:drawableLeft="@f/ic_action_forward_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_resend" android:text="@k/quick_resend" android:drawableLeft="@f/ic_action_refresh_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_copy" android:text="@k/quick_copy" android:drawableLeft="@f/ic_action_copy_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_details" android:text="@k/quick_details" android:drawableLeft="@f/ic_action_details_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_lock" android:text="@k/quick_lock" android:drawableLeft="@f/ic_action_lock_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_unlock" android:text="@k/quick_unlock" android:drawableLeft="@f/ic_action_unlock_color" style="@style/QuickButtonsVertical"/>
+    <TextView android:id="@g/quick_content_actions" android:text="@k/quick_content_actions" android:drawableLeft="@f/ic_action_content_color" style="@style/QuickButtonsVertical"/>
+</LinearLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/About_RelativeLayout" android:padding="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/messageTextView" android:paddingBottom="10dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@k/activation_title_number"/>
+    <EditText android:id="@g/numberInputEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@k/activation_number_hint" android:ems="10" android:inputType="phone">
+        <requestFocus/>
+    </EditText>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="italic" android:textColor="@e/red" android:id="@g/errorTextView" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@k/activation_error_hint"/>
+</LinearLayout>

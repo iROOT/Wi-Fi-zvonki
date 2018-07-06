@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" style="@style/Layout.Fill">
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="bold" android:textColor="@e/header" android:id="@g/header_text" android:background="@e/header_background" android:paddingLeft="10dp" android:paddingRight="10dp" android:paddingStart="10dp" android:paddingEnd="10dp" style="@style/Layout.WrapHeight"/>
+    <RelativeLayout android:padding="5dp" style="@style/Layout.WrapHeight">
+        <RelativeLayout android:id="@g/AvatarLayout" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageView android:id="@g/avatar_image" android:background="@f/avatar_background" android:layout_width="55dp" android:layout_height="55dp" android:layout_centerInParent="true" android:contentDescription="@k/cd_call_log_avatar"/>
+            <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/avatar_text" android:id="@g/avatar_initials" android:text="@k/call_log_avatar_initials_hint" android:maxLength="2" android:layout_centerInParent="true" style="@style/Layout.Wrap"/>
+        </RelativeLayout>
+        <RelativeLayout android:orientation="vertical" android:id="@g/RelativeLayout" android:layout_toLeftOf="@g/middle_side" android:layout_toRightOf="@g/AvatarLayout" android:layout_centerVertical="true" android:layout_toStartOf="@g/middle_side" android:layout_toEndOf="@g/AvatarLayout" style="@style/Layout.WrapHeight">
+            <TextView android:id="@g/list_item_title" android:text="@k/call_log_name_hint" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true" style="@style/ListItemTitleStyle"/>
+            <ImageView android:id="@g/call_type" android:paddingLeft="10dp" android:paddingRight="0dp" android:src="@f/ic_call_outgoing" android:layout_below="@g/list_item_title" android:layout_alignTop="@g/list_item_number" android:layout_alignBottom="@g/list_item_number" android:layout_alignParentLeft="true" android:contentDescription="@k/cd_call_log_icon_outgoing" android:paddingStart="10dp" android:paddingEnd="10dp" android:layout_alignParentStart="true" style="@style/Layout.Wrap"/>
+            <TextView android:id="@g/list_item_number" android:paddingLeft="0dp" android:paddingRight="0dp" android:text="@k/call_log_number_hint" android:layout_toRightOf="@g/call_type" android:layout_below="@g/list_item_title" android:paddingStart="0dp" android:paddingEnd="0dp" android:layout_toEndOf="@g/call_type" style="@style/ListItemSubTitleStyle"/>
+        </RelativeLayout>
+        <LinearLayout android:orientation="vertical" android:id="@g/middle_side" android:paddingLeft="5dp" android:paddingRight="5dp" android:layout_toLeftOf="@g/right_side" android:layout_centerVertical="true" android:layout_toStartOf="@g/right_side" style="@style/Layout.Wrap">
+            <TextView android:textColor="@e/listitem_subtitle" android:layout_gravity="end" android:id="@g/entry_count" android:text="@k/call_log_entry_count_hint" style="@style/Layout.Wrap"/>
+            <TextView android:textColor="@e/listitem_subtitle" android:layout_gravity="end" android:id="@g/call_time" android:layout_marginTop="2dp" android:text="@k/call_log_time_hint" style="@style/Layout.Wrap"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@g/right_side" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:layout_alignParentEnd="true" style="@style/Layout.Wrap">
+            <com.mavenir.android.view.DontPressWithParentImageView android:layout_gravity="center_vertical" android:id="@g/play_button" android:visibility="gone" style="@style/ListItemActionStyle"/>
+            <View android:id="@g/divider" android:background="@e/separator_vertical" android:layout_width="@dimen/divider_height" android:layout_height="match_parent" style="@style/ListItemHorizontalDividerStyle"/>
+            <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/call_button" android:src="@f/ic_action_call_color" style="@style/ListItemActionStyle"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

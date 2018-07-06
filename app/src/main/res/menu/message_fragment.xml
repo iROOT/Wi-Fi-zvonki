@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_call_color" android:id="@g/menu_call" android:title="@k/menu_call" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_new_color" android:id="@g/menu_add" android:visible="false" android:title="@k/menu_action_add_to_contacts" custom:showAsAction="always"/>
+</menu>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_edit" android:id="@g/menu_view_contact" android:title="@k/menu_edit_contact" custom:showAsAction="always"/>
+</menu>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@g/message_box" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <include android:id="@g/message_section_header" layout="@h/message_section_header"/>
+    <LinearLayout android:gravity="center_vertical" android:id="@g/message_body" android:paddingTop="10dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+            <com.mavenir.android.common.BubbleFrameLayout android:id="@g/message_content" android:paddingLeft="18dp" android:paddingTop="10dp" android:paddingRight="10dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginBottom="10dp" custom:bubbleColor="@e/message_bubble_received" custom:bubbleCornerRadius="6dp" custom:bubbleArrowType="1" custom:bubbleArrowWidth="8dp" custom:bubbleArrowHeight="16dp" custom:bubbleArrowPosition="0" custom:bubbleArrowAlign="0">
+                <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/message_bubble_received_text" android:textColorLink="@e/white" android:autoLink="all" android:id="@g/message_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/message_text_hint" android:layout_weight="1"/>
+            </com.mavenir.android.common.BubbleFrameLayout>
+        </RelativeLayout>
+        <LinearLayout android:layout_gravity="center_vertical" android:orientation="vertical" android:id="@g/message_indicators" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="60dp" android:overScrollMode="always">
+            <ImageView android:id="@g/message_lock_indicator" android:paddingBottom="5dp" android:src="@f/ic_lock" android:contentDescription="@k/cd_message_locked" style="@style/Layout.Wrap"/>
+            <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@e/gray" android:id="@g/message_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/message_time_hint"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

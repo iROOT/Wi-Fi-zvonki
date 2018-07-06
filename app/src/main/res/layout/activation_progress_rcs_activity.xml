@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="10dp">
+    <ImageView android:id="@g/activationLogoImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:src="@f/logo_splash" android:contentDescription="@k/cd_activation_logo"/>
+    <Button android:textColor="@e/white" android:gravity="center" android:id="@g/activationRetryButton" android:paddingLeft="30dp" android:paddingRight="30dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/activation_initial_retry_button" style="@style/Button"/>
+    <ProgressBar android:id="@g/activationProgressBar" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@g/activationProgressTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@k/activation_progress_activating"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:id="@g/activationErrorTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/activation_provisioning_success"/>
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_call" android:id="@g/menu_create_conference" android:visible="false" android:title="@k/menu_create_conference"/>
+    <item android:icon="@f/ic_action_delete" android:id="@g/menu_clear" android:title="@k/menu_clear" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_dialpad" android:id="@g/menu_open_dialer" android:title="@k/menu_dialer" custom:showAsAction="always"/>
+</menu>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center" android:orientation="vertical" android:background="@color/black_tele2" android:padding="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:layout_gravity="center_horizontal" android:background="@color/black_tele2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <ImageView android:id="@g/activationLogoImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:src="@f/logo_splash" android:contentDescription="@k/cd_activation_logo"/>
+        <ImageView android:id="@g/activationEngineeringMode" android:focusable="false" android:focusableInTouchMode="false" android:layout_width="30dp" android:layout_height="30dp" android:layout_centerInParent="true" android:contentDescription="@k/cd_activation_engmode"/>
+    </RelativeLayout>
+    <Button android:textColor="@e/white" android:gravity="center" android:id="@g/activationRetryButton" android:paddingLeft="30dp" android:paddingRight="30dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/activation_initial_retry_button" style="@style/Button"/>
+    <ProgressBar android:id="@g/activationProgressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="@e/gray" android:gravity="center" android:id="@g/activationProgressTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@k/activation_progress_activating"/>
+</LinearLayout>

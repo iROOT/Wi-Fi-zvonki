@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="cd_hours">
+        <item>%d hours</item>
+        <item>%d hour</item>
+    </plurals>
+    <plurals name="cd_incoming_call">
+        <item>%d incoming calls</item>
+        <item>%d incoming call</item>
+    </plurals>
+    <plurals name="cd_minutes">
+        <item>%d minutes</item>
+        <item>%d minute</item>
+    </plurals>
+    <plurals name="cd_missed_call">
+        <item>%d missed calls</item>
+        <item>%d missed call</item>
+    </plurals>
+    <plurals name="cd_outgoing_call">
+        <item>%d outgoing calls</item>
+        <item>%d outgoing call</item>
+    </plurals>
+    <plurals name="cd_seconds">
+        <item>%d seconds</item>
+        <item>%d second</item>
+    </plurals>
+    <plurals name="contacts_selected">
+        <item>%d contacts selected</item>
+        <item>1 contact selected</item>
+    </plurals>
+</resources>

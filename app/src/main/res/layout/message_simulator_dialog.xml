@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="10dp">
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/simulatedSenderTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/message_simulator_message_sender"/>
+    <EditText android:id="@g/simulatedSenderEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10">
+        <requestFocus/>
+    </EditText>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@g/messageTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/message_simulator_message_text"/>
+    <EditText android:id="@g/messageTextEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:ems="10" android:inputType="textMultiLine"/>
+</LinearLayout>

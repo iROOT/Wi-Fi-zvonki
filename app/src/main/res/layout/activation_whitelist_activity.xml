@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center_horizontal" android:orientation="vertical" android:id="@g/ActivationLinearLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@g/whitelistTitleTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="@k/activation_title_whitelist"/>
+    <View android:id="@g/separator" style="@style/ListItemHorizontalDividerStyle"/>
+    <fragment android:name="com.mavenir.android.fragments.PreferenceWhitelistFragment" android:id="@g/whitelistFragment" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <Button android:id="@g/whitelistOkButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp" android:text="@k/dialog_ok" style="@style/Button"/>
+</LinearLayout>

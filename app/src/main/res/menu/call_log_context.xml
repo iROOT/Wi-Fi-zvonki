@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_call_color" android:id="@g/menu_call" android:title="@k/menu_call"/>
+    <item android:icon="@f/ic_action_message_color" android:id="@g/menu_sms" android:title="@k/menu_sms"/>
+    <item android:icon="@f/ic_action_delete" android:id="@g/menu_delete" android:title="@k/menu_delete"/>
+</menu>

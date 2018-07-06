@@ -1,10 +1,621 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mavenir.android.apps.tele2">
+    package="com.mavenir.android.apps.tele2"
+    platformBuildVersionCode="22"
+    platformBuildVersionName="5.1.1-1819727">
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.ACTION_HEADSET_PLUG" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:name="com.mavenir.android.apps.tele2.FgVoIP"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme" />
+        android:theme="@style/Theme.Main">
+        <service android:name="com.mavenir.android.settings.BackupService" />
+        <service android:name="com.fgmicrotec.mobile.android.fgvoipcommon.CallService" />
+        <service android:name="com.mavenir.android.messaging.service.MessagingService" />
+        <service android:name="com.mavenir.android.common.BluetoothService" />
+        <service android:name="com.mavenir.android.services.SupplementaryServicesService" />
+
+        <provider
+            android:name="com.mavenir.android.settings.ClientSettingsProvider"
+            android:authorities="com.mavenir.provider.mingle"
+            android:exported="false" />
+        <provider
+            android:name="com.fgmicrotec.mobile.android.fgvoipcommon.MessagesRepositoryProvider"
+            android:authorities="com.fgmicrotec.provider.MessagesRepository"
+            android:exported="false" />
+        <provider
+            android:name="com.mavenir.android.messaging.provider.MmsSmsProviderWithNativeMessages"
+            android:authorities="com.mavenir.provider.mingle.mms-sms"
+            android:exported="false" />
+        <provider
+            android:name="com.mavenir.android.messaging.provider.SmsProvider"
+            android:authorities="com.mavenir.provider.mingle.sms"
+            android:exported="false" />
+
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
+        <activity android:name="net.hockeyapp.android.FeedbackActivity" />
+        <activity
+            android:name="com.mavenir.android.vtow.activity.SplashScreenActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mavenir.action.LAUNCH_MAIN_TAB" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mavenir.android.apps.tele2.ActivationInitialActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.vtow.activity.ActivationInitialActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.activity.ActivationActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoTitleBar" />
+        <activity android:name="com.mavenir.android.vtow.activity.ActivationTermsActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="com.fgmicrotec.mobile.android.fgvoip" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoUpperActionBar"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.HelpTopicListActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="standard"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.mavenir.action.LAUNCH_HELP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.HelpTopicDetailActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.ActivationActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.NoTitleBar" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.ContactsListActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.mavenir.android.activity.ContactsSelectionActivity" />
+        <activity
+            android:name="com.mavenir.android.activity.CallDetailsActivity"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.USSIDialogActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.Transparent.NoTitleBar">
+            <intent-filter>
+                <action android:name="USSIDialogActions.StringReceivedInd" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.ContactDetailsActivity"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.InCallScreenActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:taskAffinity="@string/empty_string"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.activity.InCallScreenActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:taskAffinity="@string/empty_string"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.IncomingCallAlertActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.MissedCallIntent"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.ConfigureAlertModes"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.ClearData"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.ClearNotificationActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.mavenir.android.activity.AboutActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.TraceSenderActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.QuickAccountSettingsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.SettingsOutgoingCallingPrefActivity"
+            android:configChanges="keyboard|orientation" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.OutgoingCallAskUser"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.mavenir.android.activity.WhitelistDialogActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.activity.DialerActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:taskAffinity="@string/empty_string"
+            android:theme="@style/Theme.Main.Transparent.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.activity.ExceptionDialogActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Main.Transparent.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceEngineeringActivity"
+            android:configChanges="keyboard|orientation"
+            android:theme="@style/Theme.Main.PreferenceTheme" />
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceTracingActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceTestUiQosActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceActivationActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceAppLogActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceMainActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceGeneralActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceQuickActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceProfileListActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceProfileAdvancedActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceAccountActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceCallActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceProfileAdvancedActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceProfileAdvancedActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceCallIdentityPresentationActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceCallForwardingActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceCallBarringActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceCallAdditionalSettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceVccActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceSmsActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceSipActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceSbcListActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceSipActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceSipActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceRtpActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceNatActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceWifiActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceQosActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceMediaActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceWhitelistActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:theme="@style/Theme.Main.PreferenceTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.messaging.activity.ConversationActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="com.mavenir.android.vtow.activity.MainTabActivity"
+            android:screenOrientation="sensor"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.vtow.activity.MainTabActivity" />
+        </activity>
+
+        <activity-alias
+            android:name="com.mavenir.android.messaging.activity.ConversationActivity.sendSms"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity="com.mavenir.android.messaging.activity.ConversationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name="com.mavenir.android.messaging.activity.MessageDetailsActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.mavenir.android.messaging.activity.NewConversationActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.fgmicrotec.mobile.android.fgvoip.SettingsSMSPrefActivity"
+            android:configChanges="keyboard|orientation" />
+        <activity
+            android:name="com.mavenir.androidui.activity.DraftsActivity"
+            android:configChanges="keyboard|orientation"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceSpiritTestActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceProfileAdvancedActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceProfileAdvancedActivity" />
+        </activity>
+
+        <receiver android:name="com.fgmicrotec.mobile.android.fgvoipcommon.CallService$CallServiceBroadcastReceiver" />
+        <receiver android:name="com.fgmicrotec.mobile.android.fgvoip.MediaBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.fgmicrotec.mobile.android.fgvoip.NewOutgoingCallReceiver"
+            android:enabled="false">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.fgmicrotec.mobile.android.fgvoip.BootCompletedBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.fgmicrotec.mobile.android.fgvoip.SentResultReceiver">
+            <intent-filter>
+                <action android:name="CallServiceActions.ActionSmsSent" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.mavenir.android.messaging.utils.SmsSendingResultReceiver">
+            <intent-filter>
+                <action android:name="com.mavenir.android.ActionSmsSendingResult" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceLteActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceProfileAdvancedActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceProfileAdvancedActivity" />
+        </activity>
+        <activity
+            android:name="com.mavenir.android.activity.PreferenceSbcLteListActivity"
+            android:configChanges="keyboard|orientation"
+            android:parentActivityName="com.mavenir.android.activity.PreferenceLteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mavenir.android.activity.PreferenceLteActivity" />
+        </activity>
+
+        <receiver android:name="com.mavenir.android.messaging.utils.SmsDeliveryResultReceiver">
+            <intent-filter>
+                <action android:name="com.mavenir.android.ActionSmsDeliveryResult" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>

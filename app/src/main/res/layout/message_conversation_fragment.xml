@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="vertical" style="@style/Layout.Fill">
+    <ListView android:id="@g/messenger_listview" android:cacheColorHint="@e/transparent" android:divider="@null" style="@style/Layout.Fill"/>
+    <include android:id="@g/messenger_empty_view" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" layout="@h/message_conversation_empty"/>
+    <include android:id="@g/messenger_search_empty" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" layout="@h/search_results_empty_screen"/>
+</LinearLayout>

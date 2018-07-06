@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:id="@android:id/list" android:scrollbars="vertical" android:fadingEdge="vertical" android:cacheColorHint="#00000000" android:divider="@null" android:fastScrollEnabled="true" style="@style/Layout.Fill"/>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@f/ic_action_call" android:id="@g/menu_call" android:title="@k/menu_call" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_call" android:enabled="false" android:id="@g/menu_video_call" android:visible="false" android:title="@k/menu_call"/>
+    <item android:icon="@f/ic_action_user" android:id="@g/menu_view_contact" android:title="@k/menu_view_contact" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_new" android:id="@g/menu_create_contact" android:title="@k/menu_create_contact" custom:showAsAction="always"/>
+    <item android:icon="@f/ic_action_message" android:id="@g/menu_sms" android:title="@k/menu_sms" custom:showAsAction="always"/>
+</menu>

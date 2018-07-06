@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:padding="5dp" style="@style/Layout.Fill">
+    <ImageView android:id="@g/callTypeIcon" android:layout_margin="10dp" android:src="@f/ic_call_outgoing" android:layout_centerVertical="true" android:contentDescription="@k/cd_call_log_icon_outgoing" style="@style/Layout.Wrap"/>
+    <RelativeLayout android:id="@g/contact_info" android:layout_marginRight="10dp" android:layout_toRightOf="@g/callTypeIcon" android:layout_centerVertical="true" android:layout_marginEnd="10dp" android:layout_toEndOf="@g/callTypeIcon" style="@style/Layout.WrapHeight">
+        <TextView android:id="@g/callDetailCallTime" android:text="@k/call_details_time_hint" style="@style/ListItemTitleStyle"/>
+        <TextView android:id="@g/callDetailDuration" android:text="@k/call_details_duration_hint" android:layout_below="@g/callDetailCallTime" style="@style/ListItemSubTitleStyle"/>
+    </RelativeLayout>
+    <com.mavenir.android.view.DontPressWithParentImageView android:id="@g/play_button" android:visibility="gone" android:layout_margin="10dp" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:contentDescription="@k/cd_call_details_play" android:layout_alignParentEnd="true" style="@style/ListItemActionStyle"/>
+</RelativeLayout>

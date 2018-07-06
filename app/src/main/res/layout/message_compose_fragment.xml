@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:background="@e/message_composer_background" style="@style/Layout.WrapHeight">
+    <View android:id="@g/separator" android:background="@e/message_composer_separator" style="@style/ListItemHorizontalDividerStyle"/>
+    <RelativeLayout android:id="@g/top" android:padding="5dp" style="@style/Layout.WrapHeight">
+        <ImageButton android:id="@g/message_attach_button" android:background="@f/btn_incall_background" android:layout_marginRight="10dp" android:src="@f/ic_bar_emoticons" android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:contentDescription="@k/cd_message_emoticon" style="@style/Layout.Wrap"/>
+        <EditText android:textSize="14sp" android:textColor="@e/white" android:id="@g/message_compose_text" android:padding="5dp" android:scrollbars="vertical" android:hint="@k/messages_text_hint" android:maxLines="5" android:layout_toLeftOf="@g/message_send_button" android:layout_toRightOf="@g/message_attach_button" android:layout_centerVertical="true" android:inputType="none|text|textCapSentences|textMultiLine" android:imeOptions="actionSend" android:textCursorDrawable="@null" style="@style/Layout.Wrap"/>
+        <ImageButton android:id="@g/message_send_button" android:background="@f/btn_incall_background" android:layout_marginLeft="10dp" android:src="@f/ic_action_send_color" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:contentDescription="@k/cd_message_send" style="@style/Layout.Wrap"/>
+    </RelativeLayout>
+    <RelativeLayout android:id="@g/message_attachment_menu" android:visibility="gone" android:layout_below="@g/top" style="@style/Layout.WrapHeight">
+        <include layout="@h/message_custom_actionbar"/>
+    </RelativeLayout>
+</RelativeLayout>

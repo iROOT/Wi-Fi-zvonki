@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="10dp">
+    <ImageView android:id="@g/activationLogoImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:src="@f/logo_splash" android:contentDescription="@k/cd_activation_logo"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@g/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@k/activation_title"/>
+    <ListView android:entries="@b/activation_choice" android:layout_gravity="center_horizontal" android:id="@g/activationListView" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout>

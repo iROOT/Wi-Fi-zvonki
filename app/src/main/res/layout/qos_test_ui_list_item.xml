@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/wifiTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_wifi" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/rtdTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_rtd" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/jitterTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_jitter" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/clTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_cl" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center" android:id="@g/flTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_fl" android:layout_weight="1"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@e/header" android:gravity="center" android:id="@g/timestampTextView" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@k/preference_dev_test_ui_timestamp" android:layout_weight="1"/>
+</LinearLayout>
